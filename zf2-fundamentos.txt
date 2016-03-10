@@ -8,8 +8,62 @@ ZEND FRAMEWORK 2: FUNDAMENTALS NEWS
 
 ### INTRODUCAO
 
-1- VAMOS COMECAR
+1.1- VAMOS COMECAR
 
+1.2 - INTRODUCAO
 
+ZF é um framework open sorce, 
+100% orientado a objetos
+Trb com componentes, que possui poucas dependencias
+ZF trb com modulos, e mantem a performace do sistema, em comparacao a outros frameworks que estao no mercado
+ZF possui outros componentes: formulario, banco, etc
+Principais funcionalidades: 
+Essencia: ZF trb com a BSZ-Lines, que possubilita o usuario a criar e vender estas sistema como se fosse seu, sem ter problemas com direitos autorais
+ZF requer PHP5.3.3
+ZF trb com Composer
+ZF trb com 2 arquitetura principais: Service Manager + Event Manager
+
+ZF2 esta muito mais atualizado que o ZF1
+ZF2 possui uma estrutura muito melhor, 
+
+ZF2 Arquitetura: utiliza varios Design Patters, como padroes de projetos, e que trb com os mais novos padroes do mercados
+
+Desacoplamento: os componentes nao sao tratados como componentes acoplados ao ZF2, vc pode utilizar  estes components fora do ZF2
+
+Listener: a milhares de Listener que ficam "escutando" a aplicacao, e disparando Trigger para executar uma outra acao
+
+Arquitetura MVC
+
+Conceitos dos o ZF2:
+1- Namespace: agrupador de Classes (pacotes)
+	nao a colizoes de nomes, nem duplicidades de nomes
+	utiliza-se Namespace em: CONSTANTE, FUNCOES E CLASSES
+
+Criar sempre:
+ 1 arquivo
+ 1 classe
+ 1 namespaces
+
+Caminho completo e apelido dentro do Namespace:
+use Zend\Db\Adapter\Driver\Maysql\Mysql as MysqlDriver
+
+ZEND\LOADER
+Zf tem milhares de arquivos proprios
+Autoloader vai chamando os arquivo conforme elas vaum sendo utilizadas
+- AutoloaderFacctory: 
+	Zend\Loader\AutoLoaderFactory
+	criar e registar namespace automaticamente
+	seria uma Fabrica de Autoloader, eles grava o caminho de  varios autoloaders, e dispara td de uma vez só
+	
+- ClassMapAutoloader:
+	para colocar uma aplicacao de desenvolvimento
+	ZF precisa saber quais sao os arquivos existentes dentro da aplicacao
+	gera um indice, um mapa, de tds os arquivos existentes
+	garante a melhor performace da apliacao
+
+-  StandardAutoloader: 
+	segue a PSR0 e a PSR4, é uma proposta de padronizacao do PHP
+	define como deve ser o nome do arquivos e o nome do namespace
+	Caminho Absoluto: Zend\Db\Adapter\Driver\Maysql\Mysql
 
 
