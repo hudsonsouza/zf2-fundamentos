@@ -4,10 +4,12 @@ https://portal.code.education
 
 ZEND FRAMEWORK 2: FUNDAMENTALS NEWS
 
+:: Data 10-03-2016 ::
+
 ### INTRODUCAO
 
 1- VAMOS COMECAR
 
- 
+
 
 
