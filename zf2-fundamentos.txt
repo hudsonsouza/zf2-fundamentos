@@ -221,3 +221,61 @@ module: guarda os molulos da nossa aplicacao
 src: controller
 	nossos codigos 
 
+
+2.5 DINAMICA GERAL
+
+noção geral do fluxo do ZF2 na pratica
+
+PARA CRIAR UMA NOVA PAGINA "PHTML"
+1- MODULE
+/module/Application/src/Apllication/Controller/IndexControles.php
+Adiciona mais uma "function"
+
+    public function exemploAction(){
+        
+        // VARIAVEL
+        $nome = "Mauro Pedreira";
+        
+        //return new ViewModel();
+        
+        // RETORNA  VARIAVEL NO ARRAY
+        return new ViewModel(array('nome1'=>$nome));
+    }
+
+
+2- VIEW
+/module/view/application/index/
+criar uma nova pagina "*.phtml"
+exemplo.phtml
+	<?php
+	echo "Olá Mundo ZF2 !!!";
+	echo "<br><br>";
+	echo "Meu nome eh <b>" . $this->nome1 . "</b>";
+
+	
+3- MODULE
+/module/Application/src/Apllication/config/module.config.php
+adiciona a rota de "exemplo"
+
+return array(
+    'router' => array(
+        'routes' => array(
+            'home' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        //'action'     => 'index',
+                        'action'     => 'exemplo',
+                    ),
+                ),
+            ),
+            
+            
+### VARIAVEIS
+
+
+ata     
+
+
