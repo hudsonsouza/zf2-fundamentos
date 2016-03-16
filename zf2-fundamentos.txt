@@ -10,7 +10,7 @@ ZEND FRAMEWORK 2: FUNDAMENTALS NEWS
 
 :: Data 10-03-2016 ::
 
-### 1. INTRODUCAO
+### MODULO 1. INTRODUCAO
 
 1.1- VAMOS COMECAR
 
@@ -91,7 +91,7 @@ download:
 
 
 
-### 2. DESIGN PATTERNS  E MVC
+### MODULO 2. DESIGN PATTERNS  E MVC
 
 
 2.1 FALANDO DOBRE PATTERNS E MVC
@@ -273,4 +273,69 @@ return array(
             ),
             
             
-### VARIAVEIS
+=> VARIAVEIS
+
+
+
+### MODULO 3. EVENT MANAGER E SHARED EVENT MANAGER
+
+3.1 Event Manager e Shared Event Manager
+
+ ---> Event Manager: 
+ ele é um OBJETO , tem 2 funcoes
+ 1- trigger : garilho
+ 2- evento: enfia uma notificacao que a trigger foi disparada
+
+Lisiner: callback - fica na escuta de quanto um evento foi desparado 
+ 
+Patter Pub/Sub
+Publisher: publica a menagem
+Subcribe: fica na escuta p ser notificado
+ 
+aspect-oriented
+Fica ouvindo se um obejeto mudou de estado
+
+Aggregator: link um evento a um lisiner
+
+
+Attach: atacha um evento a um lisiner
+
+prioridade:
+1- menor prioridade
+...
+5- maior prioridade
+
+
+Detach() desatacha, deleta o evento de ser ouvido pelo lisiner
+
+---------------
+class Foo {
+	$eventManager->trigger('someEvent', this, array('x'=>33));
+}
+
+public function someListener($e){
+	$name = $e->getname();		// someEvent
+	$target = $e->getTarget(); 	//Instance Foo
+	$param = $e->getParam('x'); // 33
+}
+---------------
+
+
+--> Shared Event Manager
+
+Compartilhar Evento 
+coleçao de varios eventos 
+ele consegue registrar eventos, mesmo que a classa nao exista ainda, que nao foi criada ainda
+
+------------
+$shared = $event->getSharedManager();
+$shared = $services->get('SharedEventManager');
+
+$shared->attach('Zend\Stdlib\DisparchableInterface', 'dispatch', $callback, $priority);
+------------
+
+
+
+
+
+
