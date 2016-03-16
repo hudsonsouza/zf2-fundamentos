@@ -194,3 +194,30 @@ localhost:8888
 
 NO NAVEGADOR - lamp
 localhost/workspace/onlinemarket.work/public
+
+
+2.4 ESTRUTURA DE DIRETORIOS
+
+Descricao das Pastas:
+
+Vendor: script zend
+
+public: servidor Lamp vai ler somente esta pasta
+index.php
+todas requisições partem daki
+	public/css
+	public/fonts
+	public/img
+	public/js
+	
+config: existe um array com todos os modulos que serao carregados
+	configuracao GLOBAL  hospedagem
+				 LOCAL: no computador de producao
+	
+data: arquilo de cache, log, temporarios
+
+module: guarda os molulos da nossa aplicacao
+	
+src: controller
+	nossos codigos 
+
