@@ -2,6 +2,10 @@
 SHOOL OF NET
 https://portal.code.education
 
+GIT HUDSON
+https://github.com/hudsonsouza/workspace.git
+
+
 ZEND FRAMEWORK 2: FUNDAMENTALS NEWS
 
 :: Data 10-03-2016 ::
@@ -145,3 +149,48 @@ arquivo AutoLoader do Composer
 
 link do exercicio pronto
 https://github.com/hudsonsouza/workspace.git
+
+
+2.3 RESOLUCAO M2Ex1
+
+download zf2
+http://www.framework.zend.com/
+get started
+ZF2 Releases - versao2 *
+ZF1 - Releases - versao1
+
+BAIXAR
+Esqueleto basico para uma aplicação
+Get the Skaleton Aplication
+http://www.framework.zend.com/downloads/skeleton-app
+
+// CRIE UM DIRETORIO
+cd my/project/dir
+
+// CLONE ZEND DIRETO DO GIT
+git clone git://github.com/zendframework/ZendSkeletonApplication.git onlinemarket.work
+
+// ENTRE NO DIRETORIO
+cd ZendSkeletonApplication
+
+//INTALAR O COMPOSER - gerenciador de dependencias do PHP
+
+php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
+php -r "if (hash('SHA384', file_get_contents('composer-setup.php')) === '41e71d86b40f28e771d4bb662b997f79625196afcca95a5abf44391188c695c6c1456e16154c75a211d238cc3bc5cb47') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+
+// INSTALAR O ZF2 DENTRO DA NOSSA PASTA DE TRB
+php composer.phar install
+
+
+// TESTAR A APLICACAO SKELETON NO NAVEGADOR
+
+NO TERMINAL, VAMOS SUBIR O SERVIDOR PHP
+$ php -S localhost:8888 -t public/
+
+NO NAVEGADOR - servidor php
+localhost:8888
+
+NO NAVEGADOR - lamp
+localhost/workspace/onlinemarket.work/public
