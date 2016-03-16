@@ -141,3 +141,7 @@ pasta vendor na raiz
 arquivo AutoLoader do Composer
 
 
+2.2 PROJETO FASE 1 (M2Ex1)
+
+link do exercicio pronto
+https://github.com/hudsonsouza/workspace.git
