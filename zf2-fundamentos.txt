@@ -537,3 +537,13 @@ utiiza um padrao Decorator, e vc consegue adicionar mais coisas dentro deste obj
 na primeira vez ele cria um novo obejto
 na segunda vez, ele chama o primeiro e retorna uma nova instancia, este servico é o mesmo objeto e a mesma                 referencia na memoria
 
+
+
+### 4.2 exemplos sobre SM
+
+onde se configura o ServiceManager
+
+module\Apllication\config\module.config.php
+
+na hora de executar, o ZF2 da um Merge em todos os arquivos de config e cria um unico arquivo com tds as configuracoes juntas
+
