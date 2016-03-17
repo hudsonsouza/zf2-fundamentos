@@ -444,8 +444,96 @@ Arq: module/Application/view/layout/layout.phtml
 Resolvido OK!
 
 
+### MODUO 4 SERVICEMANAGER
+
+4.1 Sobre o ServiceManager
+
+--- Service Manager (SM)
+Ingeçao de Independencia / Dependency Injection: 
+criar um metodo contrutor e colocar as instancias dos metodos ali dentro                                                  
+DIC Containes Injection Dependency : eles sao responsaveis por INSTANCIAS as nossas independencias
+- instancia todos os nossos objetos
+- onde mantem e se registra todos as classes do sistema
+- ele cria e instancia as dependencias da classe
+- temos uma inversao do controle:  não sou mais EU que chamo um classa com NEW, é o Framework ZF2 que chama a classe com NEW,  registra, resolve as dependencias, e me entrega pronto
+
+--- SM Service Types
+
+'service_manager' 	=> array(
+	'service'		=> array(
+		'myConfigarray' => array(
+			'db'		=> 'MySQL',
+			'user'		=> 'web1',
+			'password'	=> 'just4show',
+		),
+	),
+);
+
+OU
+
+// REGISTRANDO ESTE SERVIÇO - UTILIZANDO O OBJETO ServiceManager ***
+$serviceManager->setService('myConfigArray',  array(
+								'db'		=> 'MySQL',
+								'user'		=> 'web1',
+								'password'	=> 'just4show',
+								)
+							);
+
+//PARA RETORNAR ESSE ARRAY PARA MIM
+$setService(getMyCongiArray, arrary)
+
+
+### ServiceInvokables 
+nao precisa mais dar o NEW para instanciar 
+eu passo o nome do SERVICO, passo o caminho completo da classe, e ele ja instancia a CLASSE p mim automaticamente
+
+$serviceManger->setInvokablesClass('guestbook_service_dataMapper', 
+									'Guestbook\Service\DataMapper');
+
+
+
+### FACTORIES
+fabricar um objeto
+nao só instanciar, mais fabricar todo o objeto
+
+$servicemanager->setFactory('guestbook_entry_form',  
+							'Guestbook\Service\EntryFormFactory');
+							
+class EntryFormFactory implements FatctoryInterface{
+	public function createService(ServiceLocatorInterface $sm){
+		$form = new From\Entry();
+		$form->setHydrator(new ClassMethods());
+		$form->setInputFilter($sm->get('guestbook_entry_filter');
+		retorn $form;
+}							
+
+
+### SM Service Types Aliases
+ele cria um apelido p um nome muito grande ou complexo
+
+$serviceManager->serAlias('my_Paple_Foo', 'foo');
 
 
 
 
+--- SM Configuration
+
+
+### SM Abstract Factory
+Factory: fabricar objetos para vc, vc passa o nome do Service e ele Fabrica a Factory para vc
+
+Abstract Factory: vc chama um servico que ainda nao existe,  ele busca um serivo que ainda nao esteja criado ou registrado ainda, ela vai busca em algum nome proximo, que tenha as classes com padrao parecido
+
+
+### SM Initializers
+apos o serivo é criado, vc precisa fazer mais alguma configuracao, e vc precisa que seja inicializado mais algum metodo juntamente com este serviço, 
+
+
+### SM DELEGATORS
+utiiza um padrao Decorator, e vc consegue adicionar mais coisas dentro deste objeto
+
+
+### SM SHARED
+na primeira vez ele cria um novo obejto
+na segunda vez, ele chama o primeiro e retorna uma nova instancia, este servico é o mesmo objeto e a mesma                 referencia na memoria
 
