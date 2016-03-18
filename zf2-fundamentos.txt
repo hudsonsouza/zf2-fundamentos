@@ -496,7 +496,7 @@ $serviceManger->setInvokablesClass('guestbook_service_dataMapper',
 fabricar um objeto
 nao só instanciar, mais fabricar todo o objeto
 
-$servicemanager->setFactory('guestbook_entry_form',  lo
+$servicemanager->setFactory('guestbook_entry_form',  
 							'Guestbook\Service\EntryFormFactory');
 							
 class EntryFormFactory implements FatctoryInterface{
@@ -588,3 +588,81 @@ ARQ: onlinemarket.work/module/Application/src/Application/Controller/IndexContro
       }
       
       
+### 4.3 M4Ex1
+
+Fase não disponível ainda.
+
+
+### 4.4 Duvidas sobre SM
+
+
+
+### 4.5 Resolução M4Ex1
+
+1- apagar toda a classe ExemploService que foi criada anteriosmente
+
+2- Fase 1
+
+ARQ: onlinemarket.work/module/Application/config/module.config.php
+====
+
+	Registrar um servico especifico
+
++//        // REGISTRO DO SERVICO - DE PREFERENCIA AKI
+ +//        'invokables' => array(
+ +//            'ExemploService' => 'Application\Service\ExemploService',
+ +//        ),
+ +        
+ +        // M4Ex1 - Faze 1 - Registrar um Servico
+ +        'services' => array(  // CRIAR UM ARRAY DE 'TIPO DE SERVICES'
+ +            'categories' => array(  // NOME DO SERVICO
+ +                'bartes',  // CONTEUDO DO ARRAY 
+ +                'beauty',
+ +                'clothing',
+ +                'computer',
+ +                'entertainment',
+ +                'free',
+ +                'garden',
+ +                'general'
+ +            )
+
+
+
+ARQ: onlinemarket.work/module/Application/Module.php
+====
+
++        // M4Ex1 - Fase 2 - Recuperando o servico "Categories"
+ +        $sm = $e->getApplication()->getServiceManager();
+ +        $categories = $sm->get("categories");
+ +        
+          $vm = $e->getViewModel();  // recebo / exibe na tela / vm = ViewModel
+ +        //$vm->setVariable('categories', 'CATEGORY LIST');  // (nome_variavel , conteudo_variavel)
+ +        $vm->setVariable('categories', $categories);  // RECUPERA O CONTEUDO DO ARRAY 'categories'
+
+
+
+
+ARQ:  onlinemarket.work/module/Application/view/layout/layout.phtml
+====
+
+         <div class="container">
+              <div class="col-lg-2">
+ +                <!-- 
+ +                M4Ex1 - Fase 3 - Fazer um Forech para ler o conteudo do array "categories"
+                  <?php echo $this->categories; ?>
+ +                -->
+ +                
+ +                <!-- USANDO VIEW-HELPER HTMLIST  -->
+ +                <h4>Categories HTMLList:</h4>
+ +                <?php echo $this->htmllist($this->categories); ?>
+ +                
+ +                
+ +                <!-- USANDO FORECH PARA IMPRIMIR O CONTEUDO DO ARRAY "categories"  -->
+ +                <h4>Categories Forech:</h4>
+ +                <ul>
+ +                <?php foreach($this->categories as $category):  ?>
+ +                    <li> <?php echo $category ?> </li>  
+ +                <?php endforeach; ?>
+ +                </ul>
+ +                
+              </div>
