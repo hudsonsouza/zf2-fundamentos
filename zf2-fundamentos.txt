@@ -496,7 +496,7 @@ $serviceManger->setInvokablesClass('guestbook_service_dataMapper',
 fabricar um objeto
 nao só instanciar, mais fabricar todo o objeto
 
-$servicemanager->setFactory('guestbook_entry_form',  
+$servicemanager->setFactory('guestbook_entry_form',  lo
 							'Guestbook\Service\EntryFormFactory');
 							
 class EntryFormFactory implements FatctoryInterface{
@@ -547,3 +547,44 @@ module\Apllication\config\module.config.php
 
 na hora de executar, o ZF2 da um Merge em todos os arquivos de config e cria um unico arquivo com tds as configuracoes juntas
 
+
+ARQ: onlinemarket.work/module/Application/config/module.config.php
+====
+
+
+     'service_manager' => array(
+ +        // REGISTRO DO SERVICO - DE PREFERENCIA AKI
+ +        'invokables' => array(
+ +            'ExemploService' => 'Application\Service\ExemploService',
+ +        ),
+
+
+
+ARQ: onlinemarket.work/module/Application/Module.php
+===
+
++//    // REGISTRO DO SERVICO  - 2º caminho para registrar  
+ +//    public function getServiceConfig()
+ +//    {
+ +//        return array(
+ +//            'invokables' => array(
+ +//                'ExemploService' => 'Application\Service\ExemploService'
+ +//            )
+ +//        );
+ +//    }
+
+
+
+ARQ: onlinemarket.work/module/Application/src/Application/Controller/IndexController.php
+====
+
+     public function indexAction()
+      {
+ +        // EU NAO PRECISO DAR 'NEW' PARA INSTANCIA, É SÓ UTILIZAR
+ +        $exemploService = $this->getServiceLocator()->get("ExemploService");
+ +        print_r($exemploService);die;
+ +        
+          return new ViewModel();
+      }
+      
+      
