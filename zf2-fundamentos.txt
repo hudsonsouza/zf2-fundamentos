@@ -666,3 +666,340 @@ ARQ:  onlinemarket.work/module/Application/view/layout/layout.phtml
  +                </ul>
  +                
               </div>
+
+
+
+### MODLO 5: MVC E MODULES
+
+5.1 Entendendo nos detalhes
+
+
+### SUMARIO
+MVC do ZF2
+Modulos
+Modules interagindo com MVC
+componentes ModuleManager
+configuracao de um modulo
+boas praticas p trb com Modules
+
+https://github.com/hudsonsouza/workspace/commits/a62493786b9be13b25fb10cad892ff2dedd36b41
+
+
+estrutura basica
+- initi_autoloader.php  // config autoloaders inicial do ZF2
+- application.config.php  //  define quais os modulos que seram carregados
+- global.php // config Global da nossa aplicacao
+- local.php // config Local da nossa aplicacao
+- .htaccess // redireciona td as Requisições para o index.php
+- index.php // 
+
+Modulos
+podem estar guardados em 2 pastas
+- vendor  // modulo de terceiros
+- module // modulos meus
+
+
+BOOTSTRAPPING
+todos as configuracoes e carregamentos de modulos que o ZF2 carrega no inicio da aplicacao
+- Configuration
+possui um Array gigante de configuracao, 
+sao varios array pq, e é dado um Merge, se transformando em 1 só array gigante
+6 dependencias
+
+- ServiceManager
+instancia do SM para toda a aplicacao, 
+onde sera registrado todos os nossos serviços
+
+- EventManager
+instancia do EventManager
+ZF2 instancia o EventManager, e depois Registra como Serviço no ServiceManager,
+assim é possivel acessa-lo em toda a aplicacao
+
+- ModuleManager
+componente para carregar tds Modulo
+ZF2 isntancia o ModuleManager, e Registra como Servico no ModuleManager,
+assim é possivel acessa-lo em toda a aplicacao
+
+
+- Request
+ZF2 rega uma instancia do Request, e Registra como Serviço no ServiceManager
+assim é possivel acessa-lo em toda a aplicacao
+
+
+- Response
+ZF2 rega uma instancia do Response, e Registra como Serviço no ServiceManager
+assim é possivel acessa-lo em toda a aplicacao
+
+
+
+### Classe Aplication
+=== Tudo no ZF2 começa aqui ===
+Zend\Mvc\Application
+
+- init() 
+	- recebe os arq de configuracao APPLICATION.CONFIG.PHP
+	- loadModules() carregas os modulos q serao utilizados na aplicacao
+	- listeners que ficam ouvindo o que acontece na aplicacao, p disparar o evento
+	- roda o Bootstrapping
+
+
+
+- bootstrap()
+	- RouteListener  // pega rota URL da aplicacao
+	- DispathListener  // conforme a requesição da URL, ele dispara um Dispath, para Bootstrapping
+	- ViewManager prepara a visualização
+	- cria o MvcEvent // gera um trigger que vvai ser passado como event no boostrap
+
+
+
+- run()  // executa td
+	- pega a rota
+	- da um Dispatach
+	- manda p o Controler
+	- manda p Reendenição da View
+	- manda p processo de Finish, no processo, e dando um resposta (positiva ou de erro) ao usuario
+
+
+Instancia de Aplicacao
+	- RouterListener: usa TreeRouteStack, possui um conjunto de Rotas já Registradas, de acordo com a Rota URM que for requeisitada, ele envia para o devido Controler
+	- DispatchListener: instancia o Controler p ser utilizado
+						dispatch() é quem encaminha o processo do MVC
+	- View: reendeniza e da o Response, para enviar os dados processados para a tela do usuario final, ViewModule (padrao)
+
+
+
+=== ESTRUTUA DE UM MODULO
+arquivo Module.php
+classe module
+modulo.config.php
+pode ser criado pastas expecificas para organizar nossos arquivos
+	public/images/
+	public/css/
+	public/js/
+	OBS: tem que copiar e colar esta pasta na raiz do projeto
+
+src/ 
+	codigo fonte do modulo
+	molule_namaspace
+	mvc
+	
+test/
+	phpunit.xml  // rodar os testes
+	bootstrap.php  // inicializacao
+
+
+=== Bootstrap de um Module
+Zend\ModuleManager\ModuleManager  // componente verifica se o modulo existe e como sera carregado
+há varios Lisiners: onde milhas de coisas sejam executados simultaneamente
+
+
+ARQ: congi/apllication.config.php
+-------------
+<?php
+return array(
+	'modules' => array(
+		'Application',
+		'Guastbook',
+		'GuestbookNotification',
+		'ZfcBase',
+		),
+	'module_listerner_options' =>  array(
+		'config_glob-path' => array(
+			'config/autoload/{,*.}{global,local}.php',
+			),
+		),
+	'module_paths' => array(
+		'./module',  // modulo meus proprios
+		'./vendor',  // modulo de terceiro
+		),
+);
+------------
+
+Qd um Modulo é carregado, exeste alguns Metodos que iriremos precisar
+- getConfig()  // tras as configuracoes expecificas do module.config.php
+
+
+Qd a aplicacao vai rodar
+1- precisamos LAMP
+2- public/index.php  // 
+3- ZaneMvc\View
+	Default
+	Exception
+	Route not Found 404
+
+
+=== MVC-RELATER MODULE CONFIGURATION
+alguns metodos expecificos sao carregados automaticamente, qd um odulo é carregado
+- module.config.php
+	registrar uma Key: controllers "no plural"
+- ou atraves de metodos criados dentro do Module.php
+
+
+
+ARQ: Module.php
+-----------------
+class Module
+{
+	public function getControllerConfig()
+	{
+		return array(
+			'invokables' => array(  // Servico registrado
+				'Guestbook-Controller-Index' => 'Guestbook\Controller\IndexController',  // nome do servico 'Guestbook-Controller-Index'
+				),
+			'factories' => array(...),	
+			'services' => array(...),	
+			'aliases' => array(...),	
+		);
+		
+	}
+	
+}
+-----------------
+
+ou
+
+
+ARQ:  arquivo de configuracao / key criados dentro do module.config.php
+-----------------
+'controllers' => array(
+	'invokables' => array(
+				'Guestbook-Controller-Index' => 'Guestbook\Controller\IndexController',
+	),
+	'factories' => array(...),	
+	'services' => array(...),	
+	'aliases' => array(...),
+),
+-----------------
+
+
+### ZF2 Module System
+
+cada modulo tem o seu proprio namespace
+ModuleAutoloder  // carregamento inicial
+ModuleManager  // trb com seguencia de eventos, dispara um Listener
+ModuleManager Listeners  // ouve e dispar o Trigger
+	é uma classe que intera com o arrqy com o nome dos modulos registrados
+	Zend\ModuleManager\ModuleManager
+	pre-event
+	listeners - triggers
+	pos-event
+
+minimo para se ter um Module
+- pasta: MyModule
+- classe: MyModule\Module
+
+ARQ: MyModule.php
+------------
+<?php
+namespace My  Module;
+
+class Module  // NOME DA CLASSE É OBRIGATORIO SER 'Module'
+{
+	public funcion getAutoloaderConfig()  // OBRIGATORIIO - Registrar td no Autoloader
+	{
+		return array(
+			'Zend\Loader\ClassMapAutoloader'  => array(
+				__DIR__.'/autoloader_classmap.php',
+			),
+			'Zend\Loader\StandarAutoloader' => array(
+				'namespace' => array(
+					--NAMESPACE__ =: __DIR__.'/src/'.__NAMESPACE__,
+				),
+			),
+		);
+	}
+	
+	
+	public function getConfig()  // OBRIGATORIIO - tds as config do modulo
+	{
+		return include __DIR__.'/config/module.config.php';
+	}
+	
+}
+------------
+
+### ZF2 MVC - Event-Driven Architecture
+
+loadmodules: carrega individualmente os modulos
+
+bootstrap só é carregado, depois que tds os modules forem carregados
+
+
+### EVENTOS
+
+MvcEvent  // É O CARA CHAVE, ASSIM SM
+
+Zend\EventManager\EventInterface
+Zend\Mvc\MvcEvent
+Zend\Mbc\InjectApllicationEvent
+
+Accessor  // qual a classe que consigo pegar MvcEvent
+	getApllication() *  // recebe um instancia de Zend\MvcApplication
+	getController()  // qual controller que foi executado
+	getRequest() *  // pego um objeto Request que implemente RequestInterface do ZF2
+	getRouterMach() *  // pego a Rota URL que o usuario escolheu
+	
+	
+Mutator  // sobreescrever uma informacao
+	setAplication()
+	setController()
+	setRequest()
+	setRouterMatch()
+	
+	
+Object Involved  // qual o objeto em si que esta sendo chamado
+	Zend\Mvc\Application
+	Custon controller class
+	Zend\Stlib\RequestInterface
+	\Router\ReouteMatch
+
+
+=== CONTANTES
+
+ajuda a atachar Eventos
+
+EVENT_LOAD_MODULES  // é disparado um trigger qd é executado metodo LOAD_ MODULES, do ModuloManager
+EVENT_LOAD_MODULE_RESOLVE  // resolve em um modulo especifico
+EVENT_LOAD_MODULE  // carrega expecificamente um modulo
+EVENT_LOAD_MODULES_POST  // é dado um trigger qd termina de carregar os tds Modules
+
+
+=== LISTENER
+DefaultListenerAggregate  // é chama atraves do ModuleManager
+AutoloaderListener  // carrega aquele modulo em específico
+ConfigListener  // getConfig() 
+OnBootstrapListener  // 
+
+
+
+=== REGISTRAR UM LISTENER EXPECIFICO'MEU'
+
+
+
+==== ModuleAutoloader
+busca onde esta localizado fisicamente o nosso Modulo
+Zend\Loader\ModuleAutoloader
+
+
+=== Aggregate
+é um agregador que coloca todas as configuracoes para o Carregametno de um modulo
+
+
+==== MODULOES - BOAS PRATICAS
+
+init()  // caregamento inicial
+onBootstrap()  // configuracao inicial
+
+Sempre utilize ServiceManager para Registra tds os Serviços existentes
+ServiceManager
+Factory
+
+Onde registrar um Servico?
+- getServiceConfiguration()  // retorna todas as configuraceos do SM
+- ServiceManager
+
+
+
+
+
+
