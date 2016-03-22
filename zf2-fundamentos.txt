@@ -1,4 +1,14 @@
 
+
+NO TERMINAL, VAMOS SUBIR O SERVIDOR PHP
+$ php -S localhost:8888 -t public/
+
+NO NAVEGADOR - servidor php
+localhost:8888
+
+LOCALHOST - lamp
+localhost/workspace/onlinemarket.work/public
+
 SHOOL OF NET
 https://portal.code.education
 
@@ -999,7 +1009,164 @@ Onde registrar um Servico?
 - ServiceManager
 
 
+### 5.3 Resolução: M5Ex1 - Parte A
 
 
+INDICE
+Parte A: criar novo Modulo Market
+
+Parte B:  Instalar o modulo já existente "Search"
+
+Parte C: Instalar Zend Developer Tools
+
+### Criando um modulo a partir do Zero
+
+1- cria pasta chamada Market
+module\Market
+
+2- cria um arquivo do tipo: Class 
+O nome da classe é OBRIGATORIO se 'Module.php'  
+
+ARQ: module\Market\Module.php
+-----------
+<?php
+namespace Market;
+
+class Module 
+{
+    
+}
+-----------
+
+apartir de agora nos ja temos um modulo varido no ZF2
+
+para fazer o modulo funcionar, temos que acrescentar o nome do novo Modulo no array 'modules'
+ARQ: config\applicarion.config.php
+----------
+return array(
+    'modules' => array(
+        'Application',
+        'Market',
+    ),
+----------
+
+Agora teste no navegador e veja se esta subindo a aplicao normalmente
+http://localhost/workspace/onlinemarket.work/public/
+
+3- coloca o Metodo miniomos p o Modulo funcionar
+
+criar um pasta 'config'
+module\Market\config
+
+criar um arquivo php comum 'module.config.php'
+ARQ: module\Market\config\module.config.php
+-----------
+<?php
+namespace Market;
+
+class Module 
+{
+    public function getConfig()
+    {
+        return include __DIR__ . '/config/module.config.php';
+    }
+    
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                ),
+            ),
+        );
+    }    
+}
+-----------
 
 
+4- crar a pasta	'module\src'
+criar a pasta 	'module\src\Market'
+
+5- Registrar um controler
+criar uma pasta 	'module\src\Market\Controller'
+criar uma classe  	'module\src\Market\Controller\IndexController.php'
+
+6- View (td em letra minuscula - visao na Web)
+cria uma pasta de view			'module\view'
+cria uma pasta de modulo		'module\view\market'
+cria uma pasta de controleer	'module\viewmarket\index'
+cria um  arquivo de index		'module\viewmarket\index\index.phtml'
+
+ARQ: module\viewmarket\index\index.phtml
+---------
+<h1>Olá Index Market</h1>
+---------
+
+7- Configuracoes
+
+ARQ: module\Market\config\module.config.php
+----------
+<?php
+
+return array(
+    
+    // CONTROLE DAS ROTAS - URL
+    'router' => array(
+        'routes' => array(
+            'maket' => array(  // NOME DA URL
+                'type' => 'Zend\Mvc\Router\Http\Literal',  // CAMINHO FIXO  / NÁO É DINAMICO
+                'options' => array(
+                    'route'    => '/market',  // CAMINHO DA URL
+                    'defaults' => array(
+                        'controller' => 'Market\Controller\Index',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+        ),
+    ),
+    
+    
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(
+            'Market\Controller\Index' => 'Market\Controller\IndexController',
+        ),
+    ),
+    
+    
+    // VIEW MANAGER
+        'view_manager' => array(
+//        'display_not_found_reason' => true,
+//        'display_exceptions'       => true,
+//        'doctype'                  => 'HTML5',
+//        'not_found_template'       => 'error/404',
+//        'exception_template'       => 'error/index',
+//        'template_map' => array(
+//            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+//            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+//            'error/404'               => __DIR__ . '/../view/error/404.phtml',
+//            'error/index'             => __DIR__ . '/../view/error/index.phtml',
+//        ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+    ),
+    
+    
+);
+----------
+
+
+8- RODANDO A APLICACAO
+
+NO TERMINAL, VAMOS SUBIR O SERVIDOR PHP
+$ php -S localhost:8888 -t public/
+
+NO NAVEGADOR - servidor php
+LAMP  // PAU ***
+http://localhost/workspace/onlinemarket.work/public/market
+
+PHP SERVICE
+localhost:8888/market
