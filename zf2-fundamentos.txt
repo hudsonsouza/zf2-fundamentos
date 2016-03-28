@@ -1499,3 +1499,48 @@ RETURNING EARLY
 
 redireciona o usuario, antes de concluir o processo
 isso antes de reendenizar o view
+
+
+
+
+### 6.2 M6Ex1
+
+
+
+
+### RESOLUCAO: 6.2 M6Ex1 A - B
+
+
+### PARTE A
+
+
+criar ViewController: 
+	utilizado para modtrar itens de um banco de dados
+	Controller tipo Invokable: configurar e inicializar este controller
+		apos criar, precisa registrar o controller
+	
+	
+1- criar a ViewController
+
+ARQ: \module\Market\src\Market\Controller\ViewController.php
+----------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    public function indexAction() {
+        return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+    }
+}
+
+
+	
+criar PostController:
+	sera utilizado como uma Factury, que ira produzir o Controller
+	configurar Action, desenhar o Controller e tb utilizadas para exibir as Request na tela do usuario
+
+
+
+### RESOLUCAO: 6.3 M6Ex1 C - D
