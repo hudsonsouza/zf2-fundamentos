@@ -1,6 +1,7 @@
 
 
 NO TERMINAL, VAMOS SUBIR O SERVIDOR PHP
+$ cd /var/www/workspace/onlinemarket.work
 $ php -S localhost:8888 -t public/
 
 NO NAVEGADOR - servidor php
@@ -1306,7 +1307,195 @@ ARQ: module\Market\config\module.config.php
 
 
 
+### 5.4 Download serach_module
+
+search_module.zip - 18.6 kb
 
 
 
 
+### 5.5  Resolução M5Ex1 - parte B e C
+
+
+=== M5Ex1 - parte B ====
+
+1- Baixar e descopactar o modulo search_module.zip
+
+2- copiar e coloar o modulo ja descompactado p dentro da pasta 'module'
+ARQ: \module\serach_module
+
+
+
+Pegar o nome do Modulo, no 'namespace'
+ARQ: module\serach_module\Module
+---------
+namespace Search;
+---------
+
+
+3- Registrar o novo modulo
+ARQ: \conf\application.config.php
+------
+return array(
+    // NOME DO MODULO CRIADO
+    'modules' => array(
+        'Application',
+        'Market',
+        'Search',  // MODULO REGISTRADO
+        
+    ),
+------
+
+Renomear o nome da pasta
+de: module\search_module
+para module\Search
+
+Testar se esta instalado o modulo
+Bowser: http://localhost:8888/search/test
+
+OBS: novo modulo ZF2 instalado , ok!
+
+
+=== M5Ex1 - parte C ====
+
+Instalar o  modulo Zend Developer Tools
+serve p debugar a aplicacao
+
+entrar no Git para seguir as instrucoes para instalacao
+https://github.com/zendframework/ZendDeveloperTools
+
+----------
+# Installation
+
+Install the module via composer by running:
+composer require zendframework/zend-developer-tools:dev-master
+
+or download it directly from github and place it in your application's module/ directory.
+
+Add the ZendDeveloperTools module to the module section of your config/application.config.php
+Copy ./vendor/zendframework/zend-developer-tools/config/zenddevelopertools.local.php.dist to ./config/autoload/zenddevelopertools.local.php. Change any settings in it according to your needs.
+If server version of PHP is lower than 5.4.0 add the following in your index.php:
+
+define('REQUEST_MICROTIME', microtime(true));
+Note: The displayed execution time in the toolbar will be highly inaccurate if you don't define REQUEST_MICROTIME in PHP < 5.4.0.
+-----------
+
+1- vou na raiz do projato
+cd /var/www/workspace/onlinemarket.work
+
+2- rode o Composer
+$ php composer.phar require zendframework/zend-developer-tools:dev-master
+
+MSG ERRO:
+[Symfony\Component\Console\Exception\CommandNotFoundException] Command "composer" is not defined. 
+
+
+
+### MODULO 6 - CONTROLLES E PLUGINS
+
+6.1 CONTROLLES E PLUGINS
+
+- CONTROLLERS: 
+
+... extendes DispatchableInterface	
+	
+	public function dispatch($request, $response)
+	
+Controle possui 2 classes principais
+- AbstractAtionControlles
+	qd uma rota especifica é encontrada: ela aponta p um Atcion e um Controller
+	
+	
+	
+	
+
+- CONTROLLERS PLUGINS: 
+	criacao do plugins
+	- AsbtractActionController()
+	- AbstractRestfulController()
+	
+	- FlashMessenger();
+		trb com sessoes, com tempo de vida curto, que expira rapido
+		estas acoes só ocorrem na proxima tela, numa segunda mudanca de tela as msg desaparecem
+		- addMessage(): adiciona uma msg
+		- hasMessages(): verifica se tem msg a ser exibida
+		- getMessages(): recuperar um msg
+		- clearMessage(): llimpar as msg
+
+
+public function processAction()
+{
+	$this->flaschMessager()->addMessage('Você não está logado no Sistema');
+	return $this->redirect()_>toRoute('use-sucess');
+}
+
+
+public functiion sucessAction()
+{
+	$return = array('sucess' => true);
+	$flashMessager = $this->flashMessager();
+	
+	if($flashMessager->hasMessages()) {
+		$return['messages'] = $flashMessanger->getMessages();
+	}
+	
+	return $return;
+	
+}
+
+
+
+### REDIRECT
+
+REDIRECIONAMENTO POR ROTA 'nome da pagina 'home' '  - uso interno
+toRoute($route, array $params = array(), array $options = array() )
+
+return $this->redirect()->toRoute('login-sucess');
+
+
+REDIRECIONAMENTO POR URL - uso externo
+toUrl($url)
+
+------
+
+
+Eu quero pegar a URL de uma determinada Route, como eu faço
+mandar uma URL como link para o usuario se registrar
+
+$url = $this->url()->fromRoute('route-name', $params);
+
+public function fromRoute($route, array $params = array(), array $options = array())
+
+
+--------
+
+COMO PEGAR DADOS POR PARAMETROS PASSADOS POR POST
+
+$match = $this->params()-> fromRoute('admin');
+$name = $this->params()->fromPost('name');
+$page = $this->params()->fromQuery('page');
+
+$file = $this->params()->fromFiles('file');
+$header = $this->params()->fromHeader('header');
+
+------------
+
+PEGAR AS INFORMACOES DO getRequest() e do getResponse()
+
+$request = $this->getRequest();
+$response = $this->getResponse();
+
+ou
+
+$event = $this->getEvent();
+$request = $event->getRequest();
+$response = $event->getResponse();
+$match = $event->getRouteMatch();  // rota que usuario digitou
+
+-------------
+
+
+RETURNING EARLY
+
+redireciona o usuario, antes de concluir o processo
+isso antes de reendenizar o view

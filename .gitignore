@@ -1,0 +1,17 @@
+### IGNORAR ARQ OU PASTAS, PARA NOA SUBIR P O GITHUB
+# CRIAR ARQUIVO NA RAIZ DO PROJETO 
+# \.gitignore
+#
+### IGNORAR PELO NOME COMPLETO
+# ajuste_mensalidade.php
+#
+### IGNORAR POR EXTENSAO
+# *.gif
+#
+### IGNORAR POR CARACTER MAIUSCULO OU MINUSCULO
+# [Pp]essoa_deletada.php
+# [Pp]esspa[Dd]eletada.php
+#
+# 
+### PASTA DE APOSTILA IGNORADA
+apostilas
