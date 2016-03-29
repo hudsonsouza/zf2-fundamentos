@@ -1827,3 +1827,142 @@ http://localhost:8888/market/market-view-controller/item?itemId=1234
 
 MOSTRA RESULTADO - URL ALIASES (APELIDO)
 http://localhost:8888/market/alt/item?itemId=1234
+
+
+
+#####  MODULO 7 - ROTAS
+
+### 7.1 ENTENDENDO ROTAS
+
+- Rotas Basicas
+- TreeRouteStack
+- Tipos de Rotas
+
+
+### ROTAS BASICAS
+
+Route: é o ato de se dar um MATCH em um request especifico de um controller
+
+ZF2 permite flexibilidade enorme de tipos de rotas
+permite validadores, antes de mandar p o Controller
+
+### TreeRouteStack
+
+permite que tenhamos encadeiamento de rotas, rotas dentro de outras rotas
+- rotas pai
+- rotas filho
+
+parametro may_terminate:TRUE   // verifica rota pai
+se ZF2 encontrar de cara a rota que foi passada 'rota pai', ele acessa e  ja pode parar de procurar, pegando Action e o Controller
+
+may_terminate:FALSE  // verifica rota pai e filho
+se ZF2 nao encontrar de cara na 'rota pai', ele vai continuar procurando nas 'rotas filho' ate encontrar o que esta procurando
+
+child_routes: rotas filho
+
+### TIPOS DE ROTAS
+
+- HOSTNAME
+rotas expecificas
+hudson.zend.com
+---------------
+'subdomain-post' => array(
+	'type'=> 'Zend\Mvc\Route\Http\Hostmane',
+	'options' => array(
+		'route' => 'post.onlinemarket.com',
+		'defaults' => array(
+			'controller' => 'market-post-controller',
+			'action' => 'index',
+		),
+	),
+),
+---------------
+
+
+
+
+
+- Literal // fixa
+o que foi colocado na URL, sera procurado dentro do ZF2
+
+---------------
+'subdomain-post' => array(
+	'type'=> 'Zend\Mvc\Route\Http\Literal',
+	'options' => array(
+		'route' => '/market/post',
+		'defaults' => array(
+			'controller' => 'market-post-controller',
+			'action' => 'index',
+		),
+	),
+),
+---------------
+
+
+
+- Method
+rotas do tipo HTTP: get, head, put, delete
+
+---------------
+'market-post' => array(
+	'type'=> 'Zend\Mvc\Route\Http\Literal',
+	'options' => array(
+		'route' => '/market/post',
+		'defaults' => array(
+			'controller' => 'market-post-controller',
+			'action' => 'index',
+		),
+	),
+),
+---------------
+
+
+
+
+
+- Part  // rota filho
+é uma estenção da TreeRouteStack
+
+- Regex
+rotas com padrao de expressao regular
+
+- Scheme
+padrao HTTP, HTTPS
+---------------
+'market-purchase' => array(
+	'type'=> 'Zend\Mvc\Route\Http\Scheme',
+	'options' => array(
+		'scheme' => 'https',
+		'defaults' => array(
+			'https' => 'market-purchase-controller',
+			'action' => 'index',
+		),
+	),
+),
+---------------
+
+
+
+
+- Segment
+a mais utilizada
+determine o padrao de acesso
+pode-se passar parametros
+
+---------------
+                'market-general' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+							'defaults' => array(
+								'controller' => 'market-index-controller',
+								'action' => 'index',
+							),
+                        ),
+                ),
+---------------
+
