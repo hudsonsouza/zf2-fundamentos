@@ -1966,3 +1966,106 @@ pode-se passar parametros
                 ),
 ---------------
 
+
+
+
+### 7.2 ROTAS COM BARRAS NO FINAL
+
+Rotas com barras no final
+Muitos desenvolvedores se perguntam como permitir que se acesse as rotas usando uma barra no final.
+
+Porque até o atual momento qualquer rota que acessarmos com uma barra no final retornará um erro 404.
+
+Há várias maneiras de fazer isto, porque o Zend Framework 2 tem uma gama de possibilidades de rotas.
+
+Vamos a duas maneiras bem práticas:
+
+ 
+
+        'meu-module' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/meu-module[/]',
+                    'defaults' => array(
+                        'controller'    => 'meu-module-index-controller',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'meu-controller-A' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => 'meu-controller-A[/]',
+                            'defaults' => array(
+                                'controller'    => 'meu-module-index-controller',
+                                'action'        => 'index',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                        'child_routes' => array(
+                            'minha-action' => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => 'minha-action[/:param][/]',
+                                    'defaults' => array(
+                                        'action' => 'index'
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+Esta primeira maneira usa a rota do tipo Segment como centro da solução. Veja que onde se quer acrescentar a barra no final, o tipo da rota vira Segment e é acrescentando um [/] que torna a barra facultativa. Consequentemente nas filhas não podemos ter uma barra inicial para começar a rota, pois, se chegarmos nas filhas a barra final do rota pai é obrigatório, isto é um detalhe muito importante.
+
+ 
+
+        'meu-module' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/meu-module',
+                    'defaults' => array(
+                        'controller'    => 'meu-module-index-controller',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'slash' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/',
+                            'defaults' => array(
+                                'controller'    => 'meu-module-index-controller',
+                                'action'        => 'index',
+                            ),
+                        ),
+                     )
+                    'meu-controller-A' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/meu-controller-A',
+                            'defaults' => array(
+                                'controller'    => 'meu-module-index-controller',
+                                'action'        => 'index',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                        'child_routes' => array(
+                            'minha-action' => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => 'minha-action[/:param]',
+                                    'defaults' => array(
+                                        'action' => 'index'
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+Nesta segunda maneira, mantivemos as rotas em seu estado habitual de Literal, e adicionamos uma rota slash como filha para cuidar do acesso com o barra final. Portanto, se quisermos usar Literal e permitir barras no final da URL, basta criar uma filha somente com a / e apontar para nosso index por exemplo.
+
+
