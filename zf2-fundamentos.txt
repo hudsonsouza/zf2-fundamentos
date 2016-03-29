@@ -8,7 +8,7 @@ NO NAVEGADOR - servidor php
 localhost:8888
 
 LOCALHOST - lamp
-localhost/workspace/onlinemarket.work/public
+http://localhost/workspace/onlinemarket.work/public/
 
 SHOOL OF NET
 https://portal.code.education
@@ -1694,7 +1694,136 @@ criar PostController:
 
 ### RESOLUCAO: 6.3 M6Ex1 C - D
 
+### PARTE C - CONTROLLER
+
+Controller fazer uma Query que pega o valor pela URL
+ARQ: \module\Market\src\Market\Controller\ViewController.php
+------------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    public function indexAction() {
+        // PARTE B
+        //return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+        
+        // PARTE C
+        $category  = $this->params()->fromQuery("category");
+        return new \Zend\View\Model\ViewModel(array('category'=>$category));  
+    }
+    
+    public function itemAction()
+    {
+        $itemId = $this->params()->fromQuery('itemId');
+        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+    }
+           
+}
+------------
+
+LOCALHOST
+http://localhost:8888/market/market-view-controller/index?category=MauroPedreira
+
+Agora vamos criar uma nova funcao itemAction
+
+    public function itemAction()
+    {
+        $itemId = $this->params()->fromQuery('itemId');
+        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+    }
+
+Cria uma View para os Itens
+ARQ: \module\Market\view\item.phtml
+-------
+<h1>Itens:</h1>
+<?php echo $this->itemId; ?>
+-------
+
+LOCALHOST
+http://localhost:8888/market/market-view-controller/item?itemId=1234
 
 
+### INCREMENTAR COM UM PLUGUIM DE REDIRECT
 
 
+ARQ: \module\Market\src\Market\Controller\ViewController.php
+-------
+<?php
+namespace Market\Controller;
+//use \Zend\Mvc\Controller\AbstractActionController;
+//use \Zend\View\Model\ViewModel;
+
+class IndexController extends \Zend\Mvc\Controller\AbstractActionController {
+    
+    public function indexAction() 
+    {
+        $messages = array();
+        if($this->flashMessenger()->hasMessages()){
+            $messages = $this->flashMessenger()->getMessages();
+        }
+        return new \Zend\View\Model\ViewModel(array('messages'=>$messages));
+    }
+}
+-------
+
+
+INCREMENTAR UM ARRAY DE MOSTRAR MENSAGENS
+ARQ: \module\Market\view\market\index.phtml
+-------
+<h1>Olá Index Market</h1>
+
+<?php if(isset($this->messages) && count($this->messages)): ?>
+    <span style="color:red;">
+        <?php echo $this->htmllist($this->messages); ?>
+    </span>
+<?php endif; ?>
+-------
+
+
+LOCALHOST
+
+MOSTRA RESULTADO
+http://localhost:8888/market/market-view-controller/item?itemId=1234
+
+REDIRECIONA PARA PAGINA HOME
+http://localhost:8888/market/market-view-controller/item?itemId=
+
+
+### PARTE D 
+
+CRIAR UM APELIDO - URL ALTERANATIVA
+
+ARQ: \module\Market\config\module.config.php
+----------
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(  // TIPO DO SERVICO
+            // NOME DO SERVICO        /  CAMINHO DA CLASSE
+            //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            
+            // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+            'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            // REGISTRO DA 'viewController' M6Ex1 - parte A
+            'market-view-controller' => 'Market\Controller\ViewController',
+            ),
+        
+        // REGISTRO DA 'viewController' M6Ex1 - parte B
+        'factories' => array(
+           'market-post-controller' => 'Market\Factory\PostControllerFactory',
+        ),
+        // M6Ex1  - PARTE D - CRIAR APELIDO PARA URL
+        'aliases' => array(
+           'alt' => 'market-view-controller', 
+        ),
+        
+    ),
+    
+----------
+
+MOSTRA RESULTADO - URL NORMAL
+http://localhost:8888/market/market-view-controller/item?itemId=1234
+
+MOSTRA RESULTADO - URL ALIASES (APELIDO)
+http://localhost:8888/market/alt/item?itemId=1234
