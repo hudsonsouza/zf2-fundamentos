@@ -1,1 +1,2499 @@
-a
+
+
+NO TERMINAL, VAMOS SUBIR O SERVIDOR PHP
+$ cd /var/www/workspace/onlinemarket.work
+$ php -S localhost:8888 -t public/
+
+NO NAVEGADOR - servidor php
+localhost:8888
+
+LOCALHOST - lamp
+http://localhost/workspace/onlinemarket.work/public/
+
+SHOOL OF NET
+https://portal.code.education
+
+GIT HUDSON
+https://github.com/hudsonsouza/workspace.git
+
+
+BROWSER
+http://www.hudsonss.com.br/onlinemarket.work/public/
+www.hudsonss.com.br/onlinemarketwork/public/
+
+
+ZEND FRAMEWORK 2
+http://www.framework.zend.com/
+
+
+ZEND FRAMEWORK 2: FUNDAMENTALS NEWS
+
+:: Data 10-03-2016 ::
+
+### MODULO 1. INTRODUCAO
+
+1.1- VAMOS COMECAR
+
+1.2 - INTRODUCAO
+
+ZF é um framework open sorce, 
+100% orientado a objetos
+Trb com componentes, que possui poucas dependencias
+ZF trb com modulos, e mantem a performace do sistema, em comparacao a outros frameworks que estao no mercado
+ZF possui outros componentes: formulario, banco, etc
+Principais funcionalidades: 
+Essencia: ZF trb com a BSZ-Lines, que possubilita o usuario a criar e vender estas sistema como se fosse seu, sem ter problemas com direitos autorais
+ZF requer PHP5.3.3
+ZF trb com Composer
+ZF trb com 2 arquitetura principais: Service Manager + Event Manager
+
+ZF2 esta muito mais atualizado que o ZF1
+ZF2 possui uma estrutura muito melhor, 
+
+ZF2 Arquitetura: utiliza varios Design Patters, como padroes de projetos, e que trb com os mais novos padroes do mercados
+
+Desacoplamento: os componentes nao sao tratados como componentes acoplados ao ZF2, vc pode utilizar  estes components fora do ZF2
+
+Listener: a milhares de Listener que ficam "escutando" a aplicacao, e disparando Trigger para executar uma outra acao
+
+Arquitetura MVC
+
+Conceitos dos o ZF2:
+1- Namespace: agrupador de Classes (pacotes)
+	nao a colizoes de nomes, nem duplicidades de nomes
+	utiliza-se Namespace em: CONSTANTE, FUNCOES E CLASSES
+
+Criar sempre:
+ 1 arquivo
+ 1 classe
+ 1 namespaces
+
+Caminho completo e apelido dentro do Namespace:
+use Zend\Db\Adapter\Driver\Maysql\Mysql as MysqlDriver
+
+ZEND\LOADER
+Zf tem milhares de arquivos proprios
+Autoloader vai chamando os arquivo conforme elas vaum sendo utilizadas
+- AutoloaderFacctory: 
+	Zend\Loader\AutoLoaderFactory
+	criar e registar namespace automaticamente
+	seria uma Fabrica de Autoloader, eles grava o caminho de  varios autoloaders, e dispara td de uma vez só
+	
+- ClassMapAutoloader:
+	para colocar uma aplicacao de desenvolvimento
+	ZF precisa saber quais sao os arquivos existentes dentro da aplicacao
+	gera um indice, um mapa, de tds os arquivos existentes
+	garante a melhor performace da apliacao
+
+-  StandardAutoloader: 
+	segue a PSR0 e a PSR4, é uma proposta de padronizacao do PHP
+	define como deve ser o nome do arquivos e o nome do namespace
+	Caminho Absoluto: Zend\Db\Adapter\Driver\Maysql\Mysql
+
+
+1.3 GUIA DO ALUNO
+
+donwloas:
+1750-m2-guia-do-aluno.zip - 20.3 Mb
+
+
+1.4 GUIA DE EXERCICIOS
+
+download:
+1751-m2-guia-de-exercicios.zip - 1.4 Mb
+
+
+
+1.5 MAQUINA VIRTUAL
+
+download:
+1752-m2-maquina-virtual.zip - 516.4 Kb
+
+
+
+### MODULO 2. DESIGN PATTERNS  E MVC
+
+
+2.1 FALANDO DOBRE PATTERNS E MVC
+
+DESIGN PATTERNS
+Padrao de Projeto  - durante o processo de se trb com Orientacao a Objetos
+Sao solucoes prontas q resolver problemas
+
+- Factory Pattern: criar novos objetos
+
+- Singleton Pattern: ZF2 nao utiliza, tem por objeto de criar uma unica instancia de um objeto, dentro de todo o projeto, possui diversar defeitos, dificeis de testar
+
+- Observer (PubSub) Pattern: fica observando a mudança de estado dos objetos, e dispara uma memsagem para notificar outras classes
+
+- Strategy Pattern: cria estrategia de como se resolver problemas comuns
+	
+- Model(dados)-View(mostra na tela)-Controller() (MVC): Estrutural / Arquitetural, separa as responsabilidades da aplicacao, em camadas diferentes
+	Zend\Mvc\*
+	- Zend\Mvc\Router - Router: caminho URL http://www.hudsonss.com.br/aula1.php
+	- Zend\Mvc\Controller - Controller(Processamento Lógico: Request/Response) 
+	- Zend\Mvc\Service - Model(banco de dados) chamada banco de dados
+	- Zend\Mvc\View - View(mostra na tela) css, html. javascript
+	
+Event-Driven Architecture: conforme um MODULO é executado, ele dispara um EVENTO para exceutar outros MODULOS, nao é uma execução linear, ela vai disparando e executando conforme a necessicade	
+
+Bootsrap: lista de configuracoes da aplicacao
+
+Ordem do processamento dentro ZF2
+1- Bootsrap
+2- Router
+3- Controller
+4- Service
+5- View
+
+
+Composer: é uma biblioteca de terceiro, a parte do ZF2, um gerenciador de dependencias, ele instala as dependencias que estiverem faltando
+download:
+https://getcomposer.org/download - composer.phar
+
+Atualizar a propria versao do seu Composer
+php composer.phar self-update
+
+Instalar pela primeira vez o Composer
+php composer.phar install
+
+Update ou add packages
+php composer.phar update
+
+Vendor
+pasta vendor na raiz
+arquivo AutoLoader do Composer
+
+
+2.2 PROJETO FASE 1 (M2Ex1)
+
+link do exercicio pronto
+https://github.com/hudsonsouza/workspace.git
+
+
+2.3 RESOLUCAO M2Ex1
+
+download zf2
+http://www.framework.zend.com/
+get started
+ZF2 Releases - versao2 *
+ZF1 - Releases - versao1
+
+BAIXAR
+Esqueleto basico para uma aplicação
+Get the Skaleton Aplication
+http://www.framework.zend.com/downloads/skeleton-app
+
+// CRIE UM DIRETORIO
+cd my/project/dir
+
+// CLONE ZEND DIRETO DO GIT
+git clone git://github.com/zendframework/ZendSkeletonApplication.git onlinemarket.work
+
+// ENTRE NO DIRETORIO
+cd ZendSkeletonApplication
+
+//INTALAR O COMPOSER - gerenciador de dependencias do PHP
+
+php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
+php -r "if (hash('SHA384', file_get_contents('composer-setup.php')) === '41e71d86b40f28e771d4bb662b997f79625196afcca95a5abf44391188c695c6c1456e16154c75a211d238cc3bc5cb47') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+
+// INSTALAR O ZF2 DENTRO DA NOSSA PASTA DE TRB
+php composer.phar install
+
+
+// TESTAR A APLICACAO SKELETON NO NAVEGADOR
+
+NO TERMINAL, VAMOS SUBIR O SERVIDOR PHP
+$ php -S localhost:8888 -t public/
+
+NO NAVEGADOR - servidor php
+localhost:8888
+
+NO NAVEGADOR - lamp
+localhost/workspace/onlinemarket.work/public
+
+
+2.4 ESTRUTURA DE DIRETORIOS
+
+Descricao das Pastas:
+
+Vendor: script zend
+
+public: servidor Lamp vai ler somente esta pasta
+index.php
+todas requisições partem daki
+	public/css
+	public/fonts
+	public/img
+	public/js
+	
+config: existe um array com todos os modulos que serao carregados
+	configuracao GLOBAL  hospedagem
+				 LOCAL: no computador de producao
+	
+data: arquilo de cache, log, temporarios
+
+module: guarda os molulos da nossa aplicacao
+	
+src: controller
+	nossos codigos 
+
+
+2.5 DINAMICA GERAL
+
+noção geral do fluxo do ZF2 na pratica
+
+PARA CRIAR UMA NOVA PAGINA "PHTML"
+1- MODULE
+/module/Application/src/Apllication/Controller/IndexControles.php
+Adiciona mais uma "function"
+
+    public function exemploAction(){
+        
+        // VARIAVEL
+        $nome = "Mauro Pedreira";
+        
+        //return new ViewModel();
+        
+        // RETORNA  VARIAVEL NO ARRAY
+        return new ViewModel(array('nome1'=>$nome));
+    }
+
+
+2- VIEW
+/module/view/application/index/
+criar uma nova pagina "*.phtml"
+exemplo.phtml
+	<?php
+	echo "Olá Mundo ZF2 !!!";
+	echo "<br><br>";
+	echo "Meu nome eh <b>" . $this->nome1 . "</b>";
+
+	
+3- MODULE
+/module/Application/src/Apllication/config/module.config.php
+adiciona a rota de "exemplo"
+
+return array(
+    'router' => array(
+        'routes' => array(
+            'home' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        //'action'     => 'index',
+                        'action'     => 'exemplo',
+                    ),
+                ),
+            ),
+            
+            
+=> VARIAVEIS
+
+
+
+### MODULO 3. EVENT MANAGER E SHARED EVENT MANAGER
+
+3.1 Event Manager e Shared Event Manager
+
+ ---> Event Manager: 
+ ele é um OBJETO , tem 2 funcoes
+ 1- trigger : garilho
+ 2- evento: enfia uma notificacao que a trigger foi disparada
+
+Lisiner: callback - fica na escuta de quanto um evento foi desparado 
+ 
+Patter Pub/Sub
+Publisher: publica a menagem
+Subcribe: fica na escuta p ser notificado
+ 
+aspect-oriented
+Fica ouvindo se um obejeto mudou de estado
+
+Aggregator: link um evento a um lisiner
+
+
+Attach: atacha um evento a um lisiner
+
+prioridade:
+1- menor prioridade
+...
+5- maior prioridade
+
+
+Detach() desatacha, deleta o evento de ser ouvido pelo lisiner
+
+---------------
+class Foo {
+	$eventManager->trigger('someEvent', this, array('x'=>33));
+}
+
+public function someListener($e){
+	$name = $e->getname();		// someEvent
+	$target = $e->getTarget(); 	//Instance Foo
+	$param = $e->getParam('x'); // 33
+}
+---------------
+
+
+--> Shared Event Manager
+
+Compartilhar Evento 
+coleçao de varios eventos 
+ele consegue registrar eventos, mesmo que a classa nao exista ainda, que nao foi criada ainda
+
+------------
+$shared = $event->getSharedManager();
+$shared = $services->get('SharedEventManager');
+
+$shared->attach('Zend\Stdlib\DisparchableInterface', 'dispatch', $callback, $priority);
+------------
+
+
+3.2 M3Ex1
+
+Arq: module/Application/Module.php
+====
+
+    public function onBootstrap(MvcEvent $e)
+    {
+        $eventManager        = $e->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
+        
+        # ZF2-FUNDAMENTOS
+        # RESOLUÇÃO M3Ex1 PAGINA 15
+        
+        # acrescentar no onBootstrap()
+        # • Listens For: the " MvcEvent::EVENT_DISPATCH " event
+        # • Context: current object
+        # • Handler: onDispatch
+        # • Priority: 100
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'), 100);
+    }
+
+    public function onDispatch(MvcEvent $e){
+        $vm = $e->getViewModel();
+        $vm->setVariable('categories', 'CATEGORY LIST');
+    }
+
+
+
+Arq: module/Application/view/layout/layout.phtml
+====
+
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('ZF2 '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                        ->prependStylesheet($this->basePath('css/style.css'))
+                        ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
+                        ->prependStylesheet($this->basePath('css/bootstrap.min.css')) ?>
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()
+            ->prependFile($this->basePath('js/bootstrap.min.js'))
+            ->prependFile($this->basePath('js/jquery.min.js'))
+            ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
+            ->prependFile($this->basePath('js/html5shiv.min.js'),   'text/javascript', array('conditional' => 'lt IE 9',))
+        ; ?>
+
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;<?php echo $this->translate('Skeleton Application') ?></a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </nav>
+        <div class="container">
+            <div class="col-lg-2">
+                <?php echo $this->categories; ?>
+            </div>
+            <div class="col-lg-8">
+                <?php echo $this->content; ?>
+            </div>
+            <hr>
+        </div>
+            <footer>
+                <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+            </footer>
+        </div> <!-- /container -->
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>
+
+
+3.3 RESOLUÇÃO M3Ex1
+
+Resolvido OK!
+
+
+### MODUO 4 SERVICEMANAGER
+
+4.1 Sobre o ServiceManager
+
+--- Service Manager (SM)
+Ingeçao de Independencia / Dependency Injection: 
+criar um metodo contrutor e colocar as instancias dos metodos ali dentro                                                  
+DIC Containes Injection Dependency : eles sao responsaveis por INSTANCIAS as nossas independencias
+- instancia todos os nossos objetos
+- onde mantem e se registra todos as classes do sistema
+- ele cria e instancia as dependencias da classe
+- temos uma inversao do controle:  não sou mais EU que chamo um classa com NEW, é o Framework ZF2 que chama a classe com NEW,  registra, resolve as dependencias, e me entrega pronto
+
+--- SM Service Types
+
+'service_manager' 	=> array(
+	'service'		=> array(
+		'myConfigarray' => array(
+			'db'		=> 'MySQL',
+			'user'		=> 'web1',
+			'password'	=> 'just4show',
+		),
+	),
+);
+
+OU
+
+// REGISTRANDO ESTE SERVIÇO - UTILIZANDO O OBJETO ServiceManager ***
+$serviceManager->setService('myConfigArray',  array(
+								'db'		=> 'MySQL',
+								'user'		=> 'web1',
+								'password'	=> 'just4show',
+								)
+							);
+
+//PARA RETORNAR ESSE ARRAY PARA MIM
+$setService(getMyCongiArray, arrary)
+
+
+### ServiceInvokables 
+nao precisa mais dar o NEW para instanciar 
+eu passo o nome do SERVICO, passo o caminho completo da classe, e ele ja instancia a CLASSE p mim automaticamente
+
+$serviceManger->setInvokablesClass('guestbook_service_dataMapper', 
+									'Guestbook\Service\DataMapper');
+
+
+
+### FACTORIES
+fabricar um objeto
+nao só instanciar, mais fabricar todo o objeto
+
+$servicemanager->setFactory('guestbook_entry_form',  
+							'Guestbook\Service\EntryFormFactory');
+							
+class EntryFormFactory implements FatctoryInterface{
+	public function createService(ServiceLocatorInterface $sm){
+		$form = new From\Entry();
+		$form->setHydrator(new ClassMethods());
+		$form->setInputFilter($sm->get('guestbook_entry_filter');
+		retorn $form;
+}							
+
+
+### SM Service Types Aliases
+ele cria um apelido p um nome muito grande ou complexo
+
+$serviceManager->serAlias('my_Paple_Foo', 'foo');
+
+
+
+
+--- SM Configuration
+
+
+### SM Abstract Factory
+Factory: fabricar objetos para vc, vc passa o nome do Service e ele Fabrica a Factory para vc
+
+Abstract Factory: vc chama um servico que ainda nao existe,  ele busca um serivo que ainda nao esteja criado ou registrado ainda, ela vai busca em algum nome proximo, que tenha as classes com padrao parecido
+
+
+### SM Initializers
+apos o serivo é criado, vc precisa fazer mais alguma configuracao, e vc precisa que seja inicializado mais algum metodo juntamente com este serviço, 
+
+
+### SM DELEGATORS
+utiiza um padrao Decorator, e vc consegue adicionar mais coisas dentro deste objeto
+
+
+### SM SHARED
+na primeira vez ele cria um novo obejto
+na segunda vez, ele chama o primeiro e retorna uma nova instancia, este servico é o mesmo objeto e a mesma                 referencia na memoria
+
+
+
+### 4.2 exemplos sobre SM
+
+onde se configura o ServiceManager
+
+module\Apllication\config\module.config.php
+
+na hora de executar, o ZF2 da um Merge em todos os arquivos de config e cria um unico arquivo com tds as configuracoes juntas
+
+
+ARQ: onlinemarket.work/module/Application/config/module.config.php
+====
+
+
+     'service_manager' => array(
+ +        // REGISTRO DO SERVICO - DE PREFERENCIA AKI
+ +        'invokables' => array(
+ +            'ExemploService' => 'Application\Service\ExemploService',
+ +        ),
+
+
+
+ARQ: onlinemarket.work/module/Application/Module.php
+===
+
++//    // REGISTRO DO SERVICO  - 2º caminho para registrar  
+ +//    public function getServiceConfig()
+ +//    {
+ +//        return array(
+ +//            'invokables' => array(
+ +//                'ExemploService' => 'Application\Service\ExemploService'
+ +//            )
+ +//        );
+ +//    }
+
+
+
+ARQ: onlinemarket.work/module/Application/src/Application/Controller/IndexController.php
+====
+
+     public function indexAction()
+      {
+ +        // EU NAO PRECISO DAR 'NEW' PARA INSTANCIA, É SÓ UTILIZAR
+ +        $exemploService = $this->getServiceLocator()->get("ExemploService");
+ +        print_r($exemploService);die;
+ +        
+          return new ViewModel();
+      }
+      
+      
+### 4.3 M4Ex1
+
+Fase não disponível ainda.
+
+
+### 4.4 Duvidas sobre SM
+
+
+
+### 4.5 Resolução M4Ex1
+
+1- apagar toda a classe ExemploService que foi criada anteriosmente
+
+2- Fase 1
+
+ARQ: onlinemarket.work/module/Application/config/module.config.php
+====
+
+	Registrar um servico especifico
+
++//        // REGISTRO DO SERVICO - DE PREFERENCIA AKI
+ +//        'invokables' => array(
+ +//            'ExemploService' => 'Application\Service\ExemploService',
+ +//        ),
+ +        
+ +        // M4Ex1 - Faze 1 - Registrar um Servico
+ +        'services' => array(  // CRIAR UM ARRAY DE 'TIPO DE SERVICES'
+ +            'categories' => array(  // NOME DO SERVICO
+ +                'bartes',  // CONTEUDO DO ARRAY 
+ +                'beauty',
+ +                'clothing',
+ +                'computer',
+ +                'entertainment',
+ +                'free',
+ +                'garden',
+ +                'general'
+ +            )
+
+
+
+ARQ: onlinemarket.work/module/Application/Module.php
+====
+
++        // M4Ex1 - Fase 2 - Recuperando o servico "Categories"
+ +        $sm = $e->getApplication()->getServiceManager();
+ +        $categories = $sm->get("categories");
+ +        
+          $vm = $e->getViewModel();  // recebo / exibe na tela / vm = ViewModel
+ +        //$vm->setVariable('categories', 'CATEGORY LIST');  // (nome_variavel , conteudo_variavel)
+ +        $vm->setVariable('categories', $categories);  // RECUPERA O CONTEUDO DO ARRAY 'categories'
+
+
+
+
+ARQ:  onlinemarket.work/module/Application/view/layout/layout.phtml
+====
+
+         <div class="container">
+              <div class="col-lg-2">
+ +                <!-- 
+ +                M4Ex1 - Fase 3 - Fazer um Forech para ler o conteudo do array "categories"
+                  <?php echo $this->categories; ?>
+ +                -->
+ +                
+ +                <!-- USANDO VIEW-HELPER HTMLIST  -->
+ +                <h4>Categories HTMLList:</h4>
+ +                <?php echo $this->htmllist($this->categories); ?>
+ +                
+ +                
+ +                <!-- USANDO FORECH PARA IMPRIMIR O CONTEUDO DO ARRAY "categories"  -->
+ +                <h4>Categories Forech:</h4>
+ +                <ul>
+ +                <?php foreach($this->categories as $category):  ?>
+ +                    <li> <?php echo $category ?> </li>  
+ +                <?php endforeach; ?>
+ +                </ul>
+ +                
+              </div>
+
+
+
+### MODLO 5: MVC E MODULES
+
+5.1 Entendendo nos detalhes
+
+
+### SUMARIO
+MVC do ZF2
+Modulos
+Modules interagindo com MVC
+componentes ModuleManager
+configuracao de um modulo
+boas praticas p trb com Modules
+
+https://github.com/hudsonsouza/workspace/commits/a62493786b9be13b25fb10cad892ff2dedd36b41
+
+
+estrutura basica
+- initi_autoloader.php  // config autoloaders inicial do ZF2
+- application.config.php  //  define quais os modulos que seram carregados
+- global.php // config Global da nossa aplicacao
+- local.php // config Local da nossa aplicacao
+- .htaccess // redireciona td as Requisições para o index.php
+- index.php // 
+
+Modulos
+podem estar guardados em 2 pastas
+- vendor  // modulo de terceiros
+- module // modulos meus
+
+
+BOOTSTRAPPING
+todos as configuracoes e carregamentos de modulos que o ZF2 carrega no inicio da aplicacao
+- Configuration
+possui um Array gigante de configuracao, 
+sao varios array pq, e é dado um Merge, se transformando em 1 só array gigante
+6 dependencias
+
+- ServiceManager
+instancia do SM para toda a aplicacao, 
+onde sera registrado todos os nossos serviços
+
+- EventManager
+instancia do EventManager
+ZF2 instancia o EventManager, e depois Registra como Serviço no ServiceManager,
+assim é possivel acessa-lo em toda a aplicacao
+
+- ModuleManager
+componente para carregar tds Modulo
+ZF2 isntancia o ModuleManager, e Registra como Servico no ModuleManager,
+assim é possivel acessa-lo em toda a aplicacao
+
+
+- Request
+ZF2 rega uma instancia do Request, e Registra como Serviço no ServiceManager
+assim é possivel acessa-lo em toda a aplicacao
+
+
+- Response
+ZF2 rega uma instancia do Response, e Registra como Serviço no ServiceManager
+assim é possivel acessa-lo em toda a aplicacao
+
+
+
+### Classe Aplication
+=== Tudo no ZF2 começa aqui ===
+Zend\Mvc\Application
+
+- init() 
+	- recebe os arq de configuracao APPLICATION.CONFIG.PHP
+	- loadModules() carregas os modulos q serao utilizados na aplicacao
+	- listeners que ficam ouvindo o que acontece na aplicacao, p disparar o evento
+	- roda o Bootstrapping
+
+
+
+- bootstrap()
+	- RouteListener  // pega rota URL da aplicacao
+	- DispathListener  // conforme a requesição da URL, ele dispara um Dispath, para Bootstrapping
+	- ViewManager prepara a visualização
+	- cria o MvcEvent // gera um trigger que vvai ser passado como event no boostrap
+
+
+
+- run()  // executa td
+	- pega a rota
+	- da um Dispatach
+	- manda p o Controler
+	- manda p Reendenição da View
+	- manda p processo de Finish, no processo, e dando um resposta (positiva ou de erro) ao usuario
+
+
+Instancia de Aplicacao
+	- RouterListener: usa TreeRouteStack, possui um conjunto de Rotas já Registradas, de acordo com a Rota URM que for requeisitada, ele envia para o devido Controler
+	- DispatchListener: instancia o Controler p ser utilizado
+						dispatch() é quem encaminha o processo do MVC
+	- View: reendeniza e da o Response, para enviar os dados processados para a tela do usuario final, ViewModule (padrao)
+
+
+
+=== ESTRUTUA DE UM MODULO
+arquivo Module.php
+classe module
+modulo.config.php
+pode ser criado pastas expecificas para organizar nossos arquivos
+	public/images/
+	public/css/
+	public/js/
+	OBS: tem que copiar e colar esta pasta na raiz do projeto
+
+src/ 
+	codigo fonte do modulo
+	molule_namaspace
+	mvc
+	
+test/
+	phpunit.xml  // rodar os testes
+	bootstrap.php  // inicializacao
+
+
+=== Bootstrap de um Module
+Zend\ModuleManager\ModuleManager  // componente verifica se o modulo existe e como sera carregado
+há varios Lisiners: onde milhas de coisas sejam executados simultaneamente
+
+
+ARQ: congi/apllication.config.php
+-------------
+<?php
+return array(
+	'modules' => array(
+		'Application',
+		'Guastbook',
+		'GuestbookNotification',
+		'ZfcBase',
+		),
+	'module_listerner_options' =>  array(
+		'config_glob-path' => array(
+			'config/autoload/{,*.}{global,local}.php',
+			),
+		),
+	'module_paths' => array(
+		'./module',  // modulo meus proprios
+		'./vendor',  // modulo de terceiro
+		),
+);
+------------
+
+Qd um Modulo é carregado, exeste alguns Metodos que iriremos precisar
+- getConfig()  // tras as configuracoes expecificas do module.config.php
+
+
+Qd a aplicacao vai rodar
+1- precisamos LAMP
+2- public/index.php  // 
+3- ZaneMvc\View
+	Default
+	Exception
+	Route not Found 404
+
+
+=== MVC-RELATER MODULE CONFIGURATION
+alguns metodos expecificos sao carregados automaticamente, qd um odulo é carregado
+- module.config.php
+	registrar uma Key: controllers "no plural"
+- ou atraves de metodos criados dentro do Module.php
+
+
+
+ARQ: Module.php
+-----------------
+class Module
+{
+	public function getControllerConfig()
+	{
+		return array(
+			'invokables' => array(  // Servico registrado
+				'Guestbook-Controller-Index' => 'Guestbook\Controller\IndexController',  // nome do servico 'Guestbook-Controller-Index'
+				),
+			'factories' => array(...),	
+			'services' => array(...),	
+			'aliases' => array(...),	
+		);
+		
+	}
+	
+}
+-----------------
+
+ou
+
+
+ARQ:  arquivo de configuracao / key criados dentro do module.config.php
+-----------------
+'controllers' => array(
+	'invokables' => array(
+				'Guestbook-Controller-Index' => 'Guestbook\Controller\IndexController',
+	),
+	'factories' => array(...),	
+	'services' => array(...),	
+	'aliases' => array(...),
+),
+-----------------
+
+
+### ZF2 Module System
+
+cada modulo tem o seu proprio namespace
+ModuleAutoloder  // carregamento inicial
+ModuleManager  // trb com seguencia de eventos, dispara um Listener
+ModuleManager Listeners  // ouve e dispar o Trigger
+	é uma classe que intera com o arrqy com o nome dos modulos registrados
+	Zend\ModuleManager\ModuleManager
+	pre-event
+	listeners - triggers
+	pos-event
+
+minimo para se ter um Module
+- pasta: MyModule
+- classe: MyModule\Module
+
+ARQ: MyModule.php
+------------
+<?php
+namespace My  Module;
+
+class Module  // NOME DA CLASSE É OBRIGATORIO SER 'Module'
+{
+	public funcion getAutoloaderConfig()  // OBRIGATORIIO - Registrar td no Autoloader
+	{
+		return array(
+			'Zend\Loader\ClassMapAutoloader'  => array(
+				__DIR__.'/autoloader_classmap.php',
+			),
+			'Zend\Loader\StandarAutoloader' => array(
+				'namespace' => array(
+					--NAMESPACE__ =: __DIR__.'/src/'.__NAMESPACE__,
+				),
+			),
+		);
+	}
+	
+	
+	public function getConfig()  // OBRIGATORIIO - tds as config do modulo
+	{
+		return include __DIR__.'/config/module.config.php';
+	}
+	
+}
+------------
+
+### ZF2 MVC - Event-Driven Architecture
+
+loadmodules: carrega individualmente os modulos
+
+bootstrap só é carregado, depois que tds os modules forem carregados
+
+
+### EVENTOS
+
+MvcEvent  // É O CARA CHAVE, ASSIM SM
+
+Zend\EventManager\EventInterface
+Zend\Mvc\MvcEvent
+Zend\Mbc\InjectApllicationEvent
+
+Accessor  // qual a classe que consigo pegar MvcEvent
+	getApllication() *  // recebe um instancia de Zend\MvcApplication
+	getController()  // qual controller que foi executado
+	getRequest() *  // pego um objeto Request que implemente RequestInterface do ZF2
+	getRouterMach() *  // pego a Rota URL que o usuario escolheu
+	
+	
+Mutator  // sobreescrever uma informacao
+	setAplication()
+	setController()
+	setRequest()
+	setRouterMatch()
+	
+	
+Object Involved  // qual o objeto em si que esta sendo chamado
+	Zend\Mvc\Application
+	Custon controller class
+	Zend\Stlib\RequestInterface
+	\Router\ReouteMatch
+
+
+=== CONTANTES
+
+ajuda a atachar Eventos
+
+EVENT_LOAD_MODULES  // é disparado um trigger qd é executado metodo LOAD_ MODULES, do ModuloManager
+EVENT_LOAD_MODULE_RESOLVE  // resolve em um modulo especifico
+EVENT_LOAD_MODULE  // carrega expecificamente um modulo
+EVENT_LOAD_MODULES_POST  // é dado um trigger qd termina de carregar os tds Modules
+
+
+=== LISTENER
+DefaultListenerAggregate  // é chama atraves do ModuleManager
+AutoloaderListener  // carrega aquele modulo em específico
+ConfigListener  // getConfig() 
+OnBootstrapListener  // 
+
+
+
+=== REGISTRAR UM LISTENER EXPECIFICO'MEU'
+
+
+
+==== ModuleAutoloader
+busca onde esta localizado fisicamente o nosso Modulo
+Zend\Loader\ModuleAutoloader
+
+
+=== Aggregate
+é um agregador que coloca todas as configuracoes para o Carregametno de um modulo
+
+
+==== MODULOES - BOAS PRATICAS
+
+init()  // caregamento inicial
+onBootstrap()  // configuracao inicial
+
+Sempre utilize ServiceManager para Registra tds os Serviços existentes
+ServiceManager
+Factory
+
+Onde registrar um Servico?
+- getServiceConfiguration()  // retorna todas as configuraceos do SM
+- ServiceManager
+
+
+### 5.3 Resolução: M5Ex1 - Parte A
+
+
+INDICE
+Parte A: criar novo Modulo Market
+
+Parte B:  Instalar o modulo já existente "Search"
+
+Parte C: Instalar Zend Developer Tools
+
+### Criando um modulo a partir do Zero
+
+1- cria pasta chamada Market
+module\Market
+
+2- cria um arquivo do tipo: Class 
+O nome da classe é OBRIGATORIO se 'Module.php'  
+
+ARQ: module\Market\Module.php
+-----------
+<?php
+namespace Market;
+
+class Module 
+{
+    
+}
+-----------
+
+apartir de agora nos ja temos um modulo varido no ZF2
+
+para fazer o modulo funcionar, temos que acrescentar o nome do novo Modulo no array 'modules'
+ARQ: config\applicarion.config.php
+----------
+return array(
+    'modules' => array(
+        'Application',
+        'Market',
+    ),
+----------
+
+Agora teste no navegador e veja se esta subindo a aplicao normalmente
+http://localhost/workspace/onlinemarket.work/public/
+
+3- coloca o Metodo miniomos p o Modulo funcionar
+
+criar um pasta 'config'
+module\Market\config
+
+criar um arquivo php comum 'module.config.php'
+ARQ: module\Market\config\module.config.php
+-----------
+<?php
+namespace Market;
+
+class Module 
+{
+    public function getConfig()
+    {
+        return include __DIR__ . '/config/module.config.php';
+    }
+    
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                ),
+            ),
+        );
+    }    
+}
+-----------
+
+
+4- crar a pasta	'module\src'
+criar a pasta 	'module\src\Market'
+
+5- Registrar um controler
+criar uma pasta 	'module\src\Market\Controller'
+criar uma classe  	'module\src\Market\Controller\IndexController.php'
+
+6- View (td em letra minuscula - visao na Web)
+cria uma pasta de view			'module\view'
+cria uma pasta de modulo		'module\view\market'
+cria uma pasta de controleer	'module\viewmarket\index'
+cria um  arquivo de index		'module\viewmarket\index\index.phtml'
+
+ARQ: module\viewmarket\index\index.phtml
+---------
+<h1>Olá Index Market</h1>
+---------
+
+7- Configuracoes
+
+ARQ: module\Market\config\module.config.php
+----------
+<?php
+
+return array(
+    
+    // CONTROLE DAS ROTAS - URL
+    'router' => array(
+        'routes' => array(
+            'maket' => array(  // NOME DA URL
+                'type' => 'Zend\Mvc\Router\Http\Literal',  // CAMINHO FIXO  / NÁO É DINAMICO
+                'options' => array(
+                    'route'    => '/market',  // CAMINHO DA URL
+                    'defaults' => array(
+                        'controller' => 'Market\Controller\Index',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+        ),
+    ),
+    
+    
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(
+            'Market\Controller\Index' => 'Market\Controller\IndexController',
+        ),
+    ),
+    
+    
+    // VIEW MANAGER
+        'view_manager' => array(
+//        'display_not_found_reason' => true,
+//        'display_exceptions'       => true,
+//        'doctype'                  => 'HTML5',
+//        'not_found_template'       => 'error/404',
+//        'exception_template'       => 'error/index',
+//        'template_map' => array(
+//            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+//            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+//            'error/404'               => __DIR__ . '/../view/error/404.phtml',
+//            'error/index'             => __DIR__ . '/../view/error/index.phtml',
+//        ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+    ),
+    
+    
+);
+----------
+
+
+8- RODANDO A APLICACAO
+
+NO TERMINAL, VAMOS SUBIR O SERVIDOR PHP
+$ php -S localhost:8888 -t public/
+
+NO NAVEGADOR - servidor php
+LAMP  // PAU ***
+http://localhost/workspace/onlinemarket.work/public/market
+
+PHP SERVICE
+localhost:8888/market
+
+
+
+9- GERANDO O Autoloader do ClassMap -  
+resulta em um ganho de performace durante a execução da aplicação com ZF2
+
+entra na pasta Market
+cd /var/www/workspace/onlinemarket.work/module/Market
+
+roda o comando no Terminal do Linux
+$ php ../../vendor/zendframework/zendframework/bin/classmap_generator.php
+---------
+Creating class file map for library in '/var/www/workspace/onlinemarket.work/module/Market'...
+Wrote classmap file to '/var/www/workspace/onlinemarket.work/module/Market/autoload_classmap.php'
+---------
+
+vai criar automaticamente um arquivo 
+ARQ: module\Market\autoload_classmap.php
+-----------
+<?php
+// Generated by ZF2's ./bin/classmap_generator.php
+return array(
+    'Market\Controller\IndexController' => __DIR__ . '/src/Market/Controller/IndexController.php',
+    'Market\Module'                     => __DIR__ . '/Module.php',
+);
+-----------
+
+Agora vai na classe getAutoloaderConfig()
+
+ARQ: module\Market\Module.php
+------
+<?php
+
+return array(
+    
+    // CONTROLE DAS ROTAS - URL
+    'router' => array(
+        'routes' => array(
+            'market' => array(  // NOME DA URL
+                'type' => 'Literal',  // CAMINHO FIXO  / NÁO É DINAMICO
+                'options' => array(
+                    'route'    => '/market',  // CAMINHO DA URL
+                    'defaults' => array(
+                        //'controller' => 'Market\Controller\Index',
+                        'controller' => 'market-index-controller',
+                        'action'     => 'index',
+                    ),
+                ),
+                
+                // DEIXA A ROTA DINAMICA
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                            ),
+                        ),
+                    ),
+                ),
+                
+                
+                
+            ),
+        ),
+    ),
+    
+    
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(  // TIPO DO SERVICO
+            // NOME DO SERVICO        /  CAMINHO DA CLASSE
+            //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            
+            // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+            'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+        ),
+    ),
+    
+    
+    // VIEW MANAGER
+        'view_manager' => array(
+//        'display_not_found_reason' => true,
+//        'display_exceptions'       => true,
+//        'doctype'                  => 'HTML5',
+//        'not_found_template'       => 'error/404',
+//        'exception_template'       => 'error/index',
+//        'template_map' => array(
+//            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+//            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+//            'error/404'               => __DIR__ . '/../view/error/404.phtml',
+//            'error/index'             => __DIR__ . '/../view/error/index.phtml',
+//        ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+    ),
+    
+    
+);
+------
+
+
+10-  ROTA
+
+Acrescentar rotas de acesso para:
+URL: localhost:8888/market
+URL: localhost:8888/market/market-index-controller
+URL: localhost:8888/market/market-index-controller/index
+
+
+ARQ: module\Market\config\module.config.php
+------
+
+
+
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(  // TIPO DO SERVICO
+            // NOME DO SERVICO        /  CAMINHO DA CLASSE
+            //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            
+            // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+            'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+        ),
+    ),
+    
+------
+
+
+
+### 5.4 Download serach_module
+
+search_module.zip - 18.6 kb
+
+
+
+
+### 5.5  Resolução M5Ex1 - parte B e C
+
+
+=== M5Ex1 - parte B ====
+
+1- Baixar e descopactar o modulo search_module.zip
+
+2- copiar e coloar o modulo ja descompactado p dentro da pasta 'module'
+ARQ: \module\serach_module
+
+
+
+Pegar o nome do Modulo, no 'namespace'
+ARQ: module\serach_module\Module
+---------
+namespace Search;
+---------
+
+
+3- Registrar o novo modulo
+ARQ: \conf\application.config.php
+------
+return array(
+    // NOME DO MODULO CRIADO
+    'modules' => array(
+        'Application',
+        'Market',
+        'Search',  // MODULO REGISTRADO
+        
+    ),
+------
+
+Renomear o nome da pasta
+de: module\search_module
+para module\Search
+
+Testar se esta instalado o modulo
+Bowser: http://localhost:8888/search/test
+
+OBS: novo modulo ZF2 instalado , ok!
+
+
+=== M5Ex1 - parte C ====
+
+Instalar o  modulo Zend Developer Tools
+serve p debugar a aplicacao
+
+entrar no Git para seguir as instrucoes para instalacao
+https://github.com/zendframework/ZendDeveloperTools
+
+----------
+# Installation
+
+Install the module via composer by running:
+composer require zendframework/zend-developer-tools:dev-master
+
+or download it directly from github and place it in your application's module/ directory.
+
+Add the ZendDeveloperTools module to the module section of your config/application.config.php
+Copy ./vendor/zendframework/zend-developer-tools/config/zenddevelopertools.local.php.dist to ./config/autoload/zenddevelopertools.local.php. Change any settings in it according to your needs.
+If server version of PHP is lower than 5.4.0 add the following in your index.php:
+
+define('REQUEST_MICROTIME', microtime(true));
+Note: The displayed execution time in the toolbar will be highly inaccurate if you don't define REQUEST_MICROTIME in PHP < 5.4.0.
+-----------
+
+1- vou na raiz do projato
+cd /var/www/workspace/onlinemarket.work
+
+2- rode o Composer
+$ php composer.phar require zendframework/zend-developer-tools:dev-master
+
+MSG ERRO:
+[Symfony\Component\Console\Exception\CommandNotFoundException] Command "composer" is not defined. 
+
+
+
+### MODULO 6 - CONTROLLES E PLUGINS
+
+6.1 CONTROLLES E PLUGINS
+
+- CONTROLLERS: 
+
+... extendes DispatchableInterface	
+	
+	public function dispatch($request, $response)
+	
+Controle possui 2 classes principais
+- AbstractAtionControlles
+	qd uma rota especifica é encontrada: ela aponta p um Atcion e um Controller
+	
+	
+	
+	
+
+- CONTROLLERS PLUGINS: 
+	criacao do plugins
+	- AsbtractActionController()
+	- AbstractRestfulController()
+	
+	- FlashMessenger();
+		trb com sessoes, com tempo de vida curto, que expira rapido
+		estas acoes só ocorrem na proxima tela, numa segunda mudanca de tela as msg desaparecem
+		- addMessage(): adiciona uma msg
+		- hasMessages(): verifica se tem msg a ser exibida
+		- getMessages(): recuperar um msg
+		- clearMessage(): llimpar as msg
+
+
+public function processAction()
+{
+	$this->flaschMessager()->addMessage('Você não está logado no Sistema');
+	return $this->redirect()_>toRoute('use-sucess');
+}
+
+
+public functiion sucessAction()
+{
+	$return = array('sucess' => true);
+	$flashMessager = $this->flashMessager();
+	
+	if($flashMessager->hasMessages()) {
+		$return['messages'] = $flashMessanger->getMessages();
+	}
+	
+	return $return;
+	
+}
+
+
+
+### REDIRECT
+
+REDIRECIONAMENTO POR ROTA 'nome da pagina 'home' '  - uso interno
+toRoute($route, array $params = array(), array $options = array() )
+
+return $this->redirect()->toRoute('login-sucess');
+
+
+REDIRECIONAMENTO POR URL - uso externo
+toUrl($url)
+
+------
+
+
+Eu quero pegar a URL de uma determinada Route, como eu faço
+mandar uma URL como link para o usuario se registrar
+
+$url = $this->url()->fromRoute('route-name', $params);
+
+public function fromRoute($route, array $params = array(), array $options = array())
+
+
+--------
+
+COMO PEGAR DADOS POR PARAMETROS PASSADOS POR POST
+
+$match = $this->params()-> fromRoute('admin');
+$name = $this->params()->fromPost('name');
+$page = $this->params()->fromQuery('page');
+
+$file = $this->params()->fromFiles('file');
+$header = $this->params()->fromHeader('header');
+
+------------
+
+PEGAR AS INFORMACOES DO getRequest() e do getResponse()
+
+$request = $this->getRequest();
+$response = $this->getResponse();
+
+ou
+
+$event = $this->getEvent();
+$request = $event->getRequest();
+$response = $event->getResponse();
+$match = $event->getRouteMatch();  // rota que usuario digitou
+
+-------------
+
+
+RETURNING EARLY
+
+redireciona o usuario, antes de concluir o processo
+isso antes de reendenizar o view
+
+
+
+
+### 6.2 M6Ex1
+
+
+
+
+### RESOLUCAO: 6.2 M6Ex1 A - B
+
+
+### PARTE A
+
+
+criar ViewController: 
+	utilizado para modtrar itens de um banco de dados
+	Controller tipo Invokable: configurar e inicializar este controller
+		apos criar, precisa registrar o controller
+	
+	
+1- criar a ViewController
+
+ARQ: \module\Market\src\Market\Controller\ViewController.php
+----------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    public function indexAction() {
+        return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+    }
+}
+
+
+
+####  PARTE B
+	Utilizar uma Factory para gerar o Controller
+	
+1- Crie uma Classe PostController
+ARQ: \module\Market\src\Market\PostController.php
+---------
+<?php
+// M6Ex1 - Parte B
+namespace Market\Controller;
+
+class PostController extends \Zend\Mvc\Controller\AbstractActionController 
+{
+    public $categories;
+    
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+    }
+    
+    public function indexAction() {
+        return new \Zend\View\Model\ViewModel(array('categories'=>$this->categories));
+    }
+}
+---------
+	
+	
+2- Criar a Factory do Controller
+
+Criar a pasta \module\Market\Factory
+
+Criar uma classe PostControllerFactory.php
+ARQ: \module\Market\Factory\PostControllerFactory.php
+--------
+<?php
+
+namespace Market\Factory;
+
+class PostControllerFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    // METODO OBRIGATORIO
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $controllerManager) 
+    {
+        $allServices = $controllerManager->getServiceLocator();
+        $sm = $allServices->get('ServiceManager');
+        
+        $categories = $sm->get('categories');
+        
+        $postController = new \Market\Controller\PostController();  // INSTANCIA
+        $postController->setCategories($categories);
+        
+        return $postController;
+    }
+}
+	
+--------	
+	
+
+3- REGISTRAR O CONTROLLER
+ARQ: \module\Market\config\module.config.php
+--------
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(  // TIPO DO SERVICO
+            // NOME DO SERVICO        /  CAMINHO DA CLASSE
+            //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            
+            // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+            'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            // REGISTRO DA 'viewController' M6Ex1 - parte A
+            'market-view-controller' => 'Market\Controller\ViewController',
+            ),
+        
+        // REGISTRO DA 'viewController' M6Ex1 - parte B
+        'factories' => array(
+           'market-post-controller' => 'Market\Factory\PostControllerFactory',
+        ),
+        
+    ),
+--------
+	
+4- Criar o Template - view
+
+criar a pasta \module\Market\view\post
+
+criar o arquivo \module\Market\view\post\index.phtml
+--------
+<h1>Post Controller</h1>
+
+<?php Zend\Debug\Debug::dump($this->categories); ?>
+--------	
+	
+	
+	
+====//////////////////==========
+
+----------	
+	
+2- criar o Template: 'view'	
+	
+ARQ: \module\Market\view\market\view\index.phtml	
+---------
+<?php echo "<h1>".$this->category."</h1>"; ?>	
+---------	
+	
+	
+	
+3- REGISTRAR O CONTROLLER
+ARQ: \module\Market\config\module.config.pho
+-------------
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(  // TIPO DO SERVICO
+            // NOME DO SERVICO        /  CAMINHO DA CLASSE
+            //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            
+            // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+            'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            // REGISTRO DA 'viewController' M6Ex1 - parte A
+            'market-view-controller' => 'Market/Controller/ViewController',
+            
+        ),
+    ),	
+-------------	
+	
+4- Executar novamente o nosso ClassMap, para ele  gerar a nova relação de  Classes e Diretorios manualmente, para agilizar o processamento do ZF2, dando mais performace a aplicação.
+
+entra na pasta do Modulo do Aplicativo, pelo terminal Bash do Linux
+$ cd /var/www/workspace/onlinemarket.work/module/Market
+Executa o ClassMap
+$ php ../../vendor/zendframework/zendframework/bin/classmap_generator.php
+
+Dentro do arq 'autoload_classmap.php' ja vai aparecer listado a 'ViewController'	
+ARQ: \module\Market\autolozd_class map.php
+----------
+<?php
+// Generated by ZF2's ./bin/classmap_generator.php
+return array(
+    'Market\Factory\PostControllerFactory' => __DIR__ . '/src/Market/Factory/PostControllerFactory.php',
+    'Market\Controller\ViewController'     => __DIR__ . '/src/Market/Controller/ViewController.php',
+    'Market\Controller\PostController'     => __DIR__ . '/src/Market/Controller/PostController.php',
+    'Market\Controller\IndexController'    => __DIR__ . '/src/Market/Controller/IndexController.php',
+    'Market\Module'                        => __DIR__ . '/Module.php',
+);
+
+----------
+	
+	
+	
+	
+criar PostController:
+	sera utilizado como uma Factury, que ira produzir o Controller
+	configurar Action, desenhar o Controller e tb utilizadas para exibir as Request na tela do usuario
+
+
+
+### RESOLUCAO: 6.3 M6Ex1 C - D
+
+### PARTE C - CONTROLLER
+
+Controller fazer uma Query que pega o valor pela URL
+ARQ: \module\Market\src\Market\Controller\ViewController.php
+------------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    public function indexAction() {
+        // PARTE B
+        //return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+        
+        // PARTE C
+        $category  = $this->params()->fromQuery("category");
+        return new \Zend\View\Model\ViewModel(array('category'=>$category));  
+    }
+    
+    public function itemAction()
+    {
+        $itemId = $this->params()->fromQuery('itemId');
+        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+    }
+           
+}
+------------
+
+LOCALHOST
+http://localhost:8888/market/market-view-controller/index?category=MauroPedreira
+
+Agora vamos criar uma nova funcao itemAction
+
+    public function itemAction()
+    {
+        $itemId = $this->params()->fromQuery('itemId');
+        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+    }
+
+Cria uma View para os Itens
+ARQ: \module\Market\view\item.phtml
+-------
+<h1>Itens:</h1>
+<?php echo $this->itemId; ?>
+-------
+
+LOCALHOST
+http://localhost:8888/market/market-view-controller/item?itemId=1234
+
+
+### INCREMENTAR COM UM PLUGUIM DE REDIRECT
+
+
+ARQ: \module\Market\src\Market\Controller\ViewController.php
+-------
+<?php
+namespace Market\Controller;
+//use \Zend\Mvc\Controller\AbstractActionController;
+//use \Zend\View\Model\ViewModel;
+
+class IndexController extends \Zend\Mvc\Controller\AbstractActionController {
+    
+    public function indexAction() 
+    {
+        $messages = array();
+        if($this->flashMessenger()->hasMessages()){
+            $messages = $this->flashMessenger()->getMessages();
+        }
+        return new \Zend\View\Model\ViewModel(array('messages'=>$messages));
+    }
+}
+-------
+
+
+INCREMENTAR UM ARRAY DE MOSTRAR MENSAGENS
+ARQ: \module\Market\view\market\index.phtml
+-------
+<h1>Olá Index Market</h1>
+
+<?php if(isset($this->messages) && count($this->messages)): ?>
+    <span style="color:red;">
+        <?php echo $this->htmllist($this->messages); ?>
+    </span>
+<?php endif; ?>
+-------
+
+
+LOCALHOST
+
+MOSTRA RESULTADO
+http://localhost:8888/market/market-view-controller/item?itemId=1234
+
+REDIRECIONA PARA PAGINA HOME
+http://localhost:8888/market/market-view-controller/item?itemId=
+
+
+### PARTE D 
+
+CRIAR UM APELIDO - URL ALTERANATIVA
+
+ARQ: \module\Market\config\module.config.php
+----------
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(  // TIPO DO SERVICO
+            // NOME DO SERVICO        /  CAMINHO DA CLASSE
+            //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            
+            // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+            'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            // REGISTRO DA 'viewController' M6Ex1 - parte A
+            'market-view-controller' => 'Market\Controller\ViewController',
+            ),
+        
+        // REGISTRO DA 'viewController' M6Ex1 - parte B
+        'factories' => array(
+           'market-post-controller' => 'Market\Factory\PostControllerFactory',
+        ),
+        // M6Ex1  - PARTE D - CRIAR APELIDO PARA URL
+        'aliases' => array(
+           'alt' => 'market-view-controller', 
+        ),
+        
+    ),
+    
+----------
+
+MOSTRA RESULTADO - URL NORMAL
+http://localhost:8888/market/market-view-controller/item?itemId=1234
+
+MOSTRA RESULTADO - URL ALIASES (APELIDO)
+http://localhost:8888/market/alt/item?itemId=1234
+
+
+
+#####  MODULO 7 - ROTAS
+
+### 7.1 ENTENDENDO ROTAS
+
+- Rotas Basicas
+- TreeRouteStack
+- Tipos de Rotas
+
+
+### ROTAS BASICAS
+
+Route: é o ato de se dar um MATCH em um request especifico de um controller
+
+ZF2 permite flexibilidade enorme de tipos de rotas
+permite validadores, antes de mandar p o Controller
+
+### TreeRouteStack
+
+permite que tenhamos encadeiamento de rotas, rotas dentro de outras rotas
+- rotas pai
+- rotas filho
+
+parametro may_terminate:TRUE   // verifica rota pai
+se ZF2 encontrar de cara a rota que foi passada 'rota pai', ele acessa e  ja pode parar de procurar, pegando Action e o Controller
+
+may_terminate:FALSE  // verifica rota pai e filho
+se ZF2 nao encontrar de cara na 'rota pai', ele vai continuar procurando nas 'rotas filho' ate encontrar o que esta procurando
+
+child_routes: rotas filho
+
+### TIPOS DE ROTAS
+
+- HOSTNAME
+rotas expecificas
+hudson.zend.com
+---------------
+'subdomain-post' => array(
+	'type'=> 'Zend\Mvc\Route\Http\Hostmane',
+	'options' => array(
+		'route' => 'post.onlinemarket.com',
+		'defaults' => array(
+			'controller' => 'market-post-controller',
+			'action' => 'index',
+		),
+	),
+),
+---------------
+
+
+
+
+
+- Literal // fixa
+o que foi colocado na URL, sera procurado dentro do ZF2
+
+---------------
+'subdomain-post' => array(
+	'type'=> 'Zend\Mvc\Route\Http\Literal',
+	'options' => array(
+		'route' => '/market/post',
+		'defaults' => array(
+			'controller' => 'market-post-controller',
+			'action' => 'index',
+		),
+	),
+),
+---------------
+
+
+
+- Method
+rotas do tipo HTTP: get, head, put, delete
+
+---------------
+'market-post' => array(
+	'type'=> 'Zend\Mvc\Route\Http\Literal',
+	'options' => array(
+		'route' => '/market/post',
+		'defaults' => array(
+			'controller' => 'market-post-controller',
+			'action' => 'index',
+		),
+	),
+),
+---------------
+
+
+
+
+
+- Part  // rota filho
+é uma estenção da TreeRouteStack
+
+- Regex
+rotas com padrao de expressao regular
+
+- Scheme
+padrao HTTP, HTTPS
+---------------
+'market-purchase' => array(
+	'type'=> 'Zend\Mvc\Route\Http\Scheme',
+	'options' => array(
+		'scheme' => 'https',
+		'defaults' => array(
+			'https' => 'market-purchase-controller',
+			'action' => 'index',
+		),
+	),
+),
+---------------
+
+
+
+
+- Segment
+a mais utilizada
+determine o padrao de acesso
+pode-se passar parametros
+
+---------------
+                'market-general' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+							'defaults' => array(
+								'controller' => 'market-index-controller',
+								'action' => 'index',
+							),
+                        ),
+                ),
+---------------
+
+
+
+
+### 7.2 ROTAS COM BARRAS NO FINAL
+
+Rotas com barras no final
+Muitos desenvolvedores se perguntam como permitir que se acesse as rotas usando uma barra no final.
+
+Porque até o atual momento qualquer rota que acessarmos com uma barra no final retornará um erro 404.
+
+Há várias maneiras de fazer isto, porque o Zend Framework 2 tem uma gama de possibilidades de rotas.
+
+Vamos a duas maneiras bem práticas:
+
+ 
+
+        'meu-module' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/meu-module[/]',
+                    'defaults' => array(
+                        'controller'    => 'meu-module-index-controller',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'meu-controller-A' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => 'meu-controller-A[/]',
+                            'defaults' => array(
+                                'controller'    => 'meu-module-index-controller',
+                                'action'        => 'index',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                        'child_routes' => array(
+                            'minha-action' => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => 'minha-action[/:param][/]',
+                                    'defaults' => array(
+                                        'action' => 'index'
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+Esta primeira maneira usa a rota do tipo Segment como centro da solução. Veja que onde se quer acrescentar a barra no final, o tipo da rota vira Segment e é acrescentando um [/] que torna a barra facultativa. Consequentemente nas filhas não podemos ter uma barra inicial para começar a rota, pois, se chegarmos nas filhas a barra final do rota pai é obrigatório, isto é um detalhe muito importante.
+
+ 
+
+        'meu-module' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/meu-module',
+                    'defaults' => array(
+                        'controller'    => 'meu-module-index-controller',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'slash' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/',
+                            'defaults' => array(
+                                'controller'    => 'meu-module-index-controller',
+                                'action'        => 'index',
+                            ),
+                        ),
+                     )
+                    'meu-controller-A' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/meu-controller-A',
+                            'defaults' => array(
+                                'controller'    => 'meu-module-index-controller',
+                                'action'        => 'index',
+                            ),
+                        ),
+                        'may_terminate' => true,
+                        'child_routes' => array(
+                            'minha-action' => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => 'minha-action[/:param]',
+                                    'defaults' => array(
+                                        'action' => 'index'
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+Nesta segunda maneira, mantivemos as rotas em seu estado habitual de Literal, e adicionamos uma rota slash como filha para cuidar do acesso com o barra final. Portanto, se quisermos usar Literal e permitir barras no final da URL, basta criar uma filha somente com a / e apontar para nosso index por exemplo.
+
+
+### RESOLUCAO: M7Ex1
+
+# PARTE A
+
+1- Criar a rota 'home' dentro de Market
+
+ARQ: \module\Market\config\module.config.php
+--------
+    // CONTROLE DAS ROTAS - URL
+    'router' => array(
+        'routes' => array(
+            'home' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+--------
+
+URL: http://localhost:8888/
+Olá Index Market
+
+foi redirecionado para:
+URL: http://localhost:8888
+
+
+Hierarquia, prp esse ova rota substituiu o meu Home da pagina original
+ordem da prioridade dos modulos que foram registrados
+o ULTIMO é que tem a MAIOR prioridade
+
+ARQ: \config\application.config.php
+------------
+return array(
+    // NOME DO MODULO CRIADO
+    'modules' => array(
+        'Application',
+        'Market',
+        'Search',
+        
+    ),
+------------
+
+
+
+
+# PARTE B
+
+ARQ: \module\Market\config\module.config.php
+------------          
+            // M7Ex1 - PARTE B
+            // M7Ex1 - PARTE B
+            
+            'market' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ), 
+
+            
+            'market-view' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market/view',
+                    'defaults' => array(
+                        'controller' => 'market-view-controller',
+                        'action' => 'index',
+                    ),
+                ),
+
+                /* ==  COMENTADO PRQ TEM O MESMO NOME
+            ),
+            
+            
+            'market' => array(  // NOME DA URL
+                'type' => 'Literal',  // CAMINHO FIXO  / NÁO É DINAMICO
+                'options' => array(
+                    'route'    => '/market',  // CAMINHO DA URL
+                    'defaults' => array(
+                        //'controller' => 'Market\Controller\Index',
+                        'controller' => 'market-index-controller',
+                        'action'     => 'index',
+                    ),
+                ),
+                 
+                 */
+                
+----------
+
+
+
+### PARTE C 
+
+CRIAR A rota Post-Controller
+
+ARQ: \module\Market\config\module.config.php
+----------
+            // M7Ex1 - PARTE C
+            
+            'market-post' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market/post',
+                    'defaults' => array(
+                        'controller' => 'market-post-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ), 
+----------
+
+
+
+### PARTE D
+
+CRIAR uma Part-route para pegar os parametros
+
+
+ARQ: \module\Market\config\module.config.php
+-----------
+                // DEIXA A ROTA DINAMICA
+                'may_terminate' => true,
+                'child_routes' => array(
+                    
+                    'index' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            //'route'    => '/[:controller[/:action]]',
+                            'route'    => '/main[/:category]',
+//                            'constraints' => array(
+//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                            ),
+                            'defaults' => array(
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                    
+                    'item' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/item[/:itemId]',
+                            'defaults' => array(
+                                'action' => 'item',
+                            ),
+                            'constraints' => array(
+                                'itemId' => '[0-9]*',
+                            ),                            
+                        ),
+                    ),                    
+                    
+                ),
+-----------
+
+
+FINAL DO ARQUIVO - completo
+ARQ: \module\Market\config\module.config.php
+--------
+<?php
+
+return array(
+    
+    // CONTROLE DAS ROTAS - URL
+    'router' => array(
+        'routes' => array(
+            
+            // M7Ex1 - PARTE A
+            'home' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            
+            // M7Ex1 - PARTE B
+            
+            'market' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ), 
+            
+            // M7Ex1 - PARTE C
+            
+            'market-post' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market/post',
+                    'defaults' => array(
+                        'controller' => 'market-post-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ), 
+
+            // === ROTAS PAI === 
+            
+            'market-view' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market/view',
+                    'defaults' => array(
+                        'controller' => 'market-view-controller',
+                        'action' => 'index',
+                    ),
+                ),
+
+                /* ==  COMENTADO PRQ TEM O MESMO NOME
+            ),
+            
+            
+            'market' => array(  // NOME DA URL
+                'type' => 'Literal',  // CAMINHO FIXO  / NÁO É DINAMICO
+                'options' => array(
+                    'route'    => '/market',  // CAMINHO DA URL
+                    'defaults' => array(
+                        //'controller' => 'Market\Controller\Index',
+                        'controller' => 'market-index-controller',
+                        'action'     => 'index',
+                    ),
+                ),
+                 
+                 */
+                
+                // === ROTAS FILHO ===
+                
+                // DEIXA A ROTA DINAMICA
+                'may_terminate' => true,
+                'child_routes' => array(
+                    
+                    'index' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            //'route'    => '/[:controller[/:action]]',
+                            'route'    => '/main[/:category]',
+//                            'constraints' => array(
+//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                            ),
+                            'defaults' => array(
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                    
+                    'item' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/item[/:itemId]',
+                            'defaults' => array(
+                                'action' => 'item',
+                            ),
+                            'constraints' => array(
+                                'itemId' => '[0-9]*',
+                            ),                            
+                        ),
+                    ),                    
+                    
+                ),
+  
+            ),
+        ),
+    ),
+    
+    
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(  // TIPO DO SERVICO
+            // NOME DO SERVICO        /  CAMINHO DA CLASSE
+            //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            
+            // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+            'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            // REGISTRO DA 'viewController' M6Ex1 - parte A
+            'market-view-controller' => 'Market\Controller\ViewController',
+            ),
+        
+        // REGISTRO DA 'viewController' M6Ex1 - parte B
+        'factories' => array(
+           'market-post-controller' => 'Market\Factory\PostControllerFactory',
+        ),
+        // M6Ex1  - PARTE D - CRIAR APELIDO PARA URL
+        'aliases' => array(
+           'alt' => 'market-view-controller', 
+        ),
+        
+    ),
+    
+    
+    // VIEW MANAGER
+        'view_manager' => array(
+//        'display_not_found_reason' => true,
+//        'display_exceptions'       => true,
+//        'doctype'                  => 'HTML5',
+//        'not_found_template'       => 'error/404',
+//        'exception_template'       => 'error/index',
+//        'template_map' => array(
+//            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+//            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+//            'error/404'               => __DIR__ . '/../view/error/404.phtml',
+//            'error/index'             => __DIR__ . '/../view/error/index.phtml',
+//        ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+    ),
+    
+    
+);
+--------
+
+
+
+
+Precisamos de alguns ajustes no nosso Controller para o ZF2 encontras as rotas
+
+ARQ: /module/Market/src/Market/Controller/ViewController.php
+-----------------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    public function indexAction() {
+        // PARTE B
+        //return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+        
+        // PARTE C
+        //$category  = $this->params()->fromQuery("category");
+        
+        //M7Ex1 - Parte D
+        $category  = $this->params()->fromRoute("category");
+        
+        return new \Zend\View\Model\ViewModel(array('category'=>$category));  
+    }
+    
+    public function itemAction()
+    {
+        // M6Ex1 - Parte C
+        //$itemId = $this->params()->fromQuery('itemId');
+        
+        //M7Ex1 - Parte D
+        $itemId = $this->params()->fromRoute('itemId');
+        
+        
+        
+        // REDIRECIONA PARA PAGINA 'home' CASO itemId ESTAJA EM BRANCO
+        if(!$itemId){
+            $this->flashMessenger()->addMessage("Item not found");
+            //return $this->redirect()->toRoute('home');
+            return $this->redirect()->toRoute('market');
+        }
+        
+        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+    }
+           
+}
+-----------------
+
+
+
+#### PARTE E - - PARTE ROUTE - UMA ROTA DENTRO DA OUTRA - FINAL
+
+CRIAR UM PADRAO DAS ROTAS - organizando as rotas
+
+ARQ: \module\Market\config\module.config.php
+----------------------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    public function indexAction() {
+        // PARTE B
+        //return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+        
+        // PARTE C
+        //$category  = $this->params()->fromQuery("category");
+        
+        //M7Ex1 - Parte D
+        $category  = $this->params()->fromRoute("category");
+        
+        return new \Zend\View\Model\ViewModel(array('category'=>$category));  
+    }
+    
+    public function itemAction()
+    {
+        // M6Ex1 - Parte C
+        //$itemId = $this->params()->fromQuery('itemId');
+        
+        //M7Ex1 - Parte D
+        $itemId = $this->params()->fromRoute('itemId');
+        
+        
+        
+        // REDIRECIONA PARA PAGINA 'home' CASO itemId ESTAJA EM BRANCO
+        if(!$itemId){
+            $this->flashMessenger()->addMessage("Item not found");
+            //return $this->redirect()->toRoute('home');
+            return $this->redirect()->toRoute('market');
+        }
+        
+        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+    }
+           
+}
+----------------------
+
