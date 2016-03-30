@@ -2069,3 +2069,431 @@ Esta primeira maneira usa a rota do tipo Segment como centro da solução. Veja 
 Nesta segunda maneira, mantivemos as rotas em seu estado habitual de Literal, e adicionamos uma rota slash como filha para cuidar do acesso com o barra final. Portanto, se quisermos usar Literal e permitir barras no final da URL, basta criar uma filha somente com a / e apontar para nosso index por exemplo.
 
 
+### RESOLUCAO: M7Ex1
+
+# PARTE A
+
+1- Criar a rota 'home' dentro de Market
+
+ARQ: \module\Market\config\module.config.php
+--------
+    // CONTROLE DAS ROTAS - URL
+    'router' => array(
+        'routes' => array(
+            'home' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+--------
+
+URL: http://localhost:8888/
+Olá Index Market
+
+foi redirecionado para:
+URL: http://localhost:8888
+
+
+Hierarquia, prp esse ova rota substituiu o meu Home da pagina original
+ordem da prioridade dos modulos que foram registrados
+o ULTIMO é que tem a MAIOR prioridade
+
+ARQ: \config\application.config.php
+------------
+return array(
+    // NOME DO MODULO CRIADO
+    'modules' => array(
+        'Application',
+        'Market',
+        'Search',
+        
+    ),
+------------
+
+
+
+
+# PARTE B
+
+ARQ: \module\Market\config\module.config.php
+------------          
+            // M7Ex1 - PARTE B
+            // M7Ex1 - PARTE B
+            
+            'market' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ), 
+
+            
+            'market-view' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market/view',
+                    'defaults' => array(
+                        'controller' => 'market-view-controller',
+                        'action' => 'index',
+                    ),
+                ),
+
+                /* ==  COMENTADO PRQ TEM O MESMO NOME
+            ),
+            
+            
+            'market' => array(  // NOME DA URL
+                'type' => 'Literal',  // CAMINHO FIXO  / NÁO É DINAMICO
+                'options' => array(
+                    'route'    => '/market',  // CAMINHO DA URL
+                    'defaults' => array(
+                        //'controller' => 'Market\Controller\Index',
+                        'controller' => 'market-index-controller',
+                        'action'     => 'index',
+                    ),
+                ),
+                 
+                 */
+                
+----------
+
+
+
+### PARTE C 
+
+CRIAR A rota Post-Controller
+
+ARQ: \module\Market\config\module.config.php
+----------
+            // M7Ex1 - PARTE C
+            
+            'market-post' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market/post',
+                    'defaults' => array(
+                        'controller' => 'market-post-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ), 
+----------
+
+
+
+### PARTE D
+
+CRIAR uma Part-route para pegar os parametros
+
+
+ARQ: \module\Market\config\module.config.php
+-----------
+                // DEIXA A ROTA DINAMICA
+                'may_terminate' => true,
+                'child_routes' => array(
+                    
+                    'index' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            //'route'    => '/[:controller[/:action]]',
+                            'route'    => '/main[/:category]',
+//                            'constraints' => array(
+//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                            ),
+                            'defaults' => array(
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                    
+                    'item' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/item[/:itemId]',
+                            'defaults' => array(
+                                'action' => 'item',
+                            ),
+                            'constraints' => array(
+                                'itemId' => '[0-9]*',
+                            ),                            
+                        ),
+                    ),                    
+                    
+                ),
+-----------
+
+
+FINAL DO ARQUIVO - completo
+ARQ: \module\Market\config\module.config.php
+--------
+<?php
+
+return array(
+    
+    // CONTROLE DAS ROTAS - URL
+    'router' => array(
+        'routes' => array(
+            
+            // M7Ex1 - PARTE A
+            'home' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            
+            // M7Ex1 - PARTE B
+            
+            'market' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ), 
+            
+            // M7Ex1 - PARTE C
+            
+            'market-post' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market/post',
+                    'defaults' => array(
+                        'controller' => 'market-post-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ), 
+
+            // === ROTAS PAI === 
+            
+            'market-view' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market/view',
+                    'defaults' => array(
+                        'controller' => 'market-view-controller',
+                        'action' => 'index',
+                    ),
+                ),
+
+                /* ==  COMENTADO PRQ TEM O MESMO NOME
+            ),
+            
+            
+            'market' => array(  // NOME DA URL
+                'type' => 'Literal',  // CAMINHO FIXO  / NÁO É DINAMICO
+                'options' => array(
+                    'route'    => '/market',  // CAMINHO DA URL
+                    'defaults' => array(
+                        //'controller' => 'Market\Controller\Index',
+                        'controller' => 'market-index-controller',
+                        'action'     => 'index',
+                    ),
+                ),
+                 
+                 */
+                
+                // === ROTAS FILHO ===
+                
+                // DEIXA A ROTA DINAMICA
+                'may_terminate' => true,
+                'child_routes' => array(
+                    
+                    'index' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            //'route'    => '/[:controller[/:action]]',
+                            'route'    => '/main[/:category]',
+//                            'constraints' => array(
+//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                            ),
+                            'defaults' => array(
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                    
+                    'item' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/item[/:itemId]',
+                            'defaults' => array(
+                                'action' => 'item',
+                            ),
+                            'constraints' => array(
+                                'itemId' => '[0-9]*',
+                            ),                            
+                        ),
+                    ),                    
+                    
+                ),
+  
+            ),
+        ),
+    ),
+    
+    
+    // SM - REGISTRO DO SERVICO
+    'controllers' => array(
+        'invokables' => array(  // TIPO DO SERVICO
+            // NOME DO SERVICO        /  CAMINHO DA CLASSE
+            //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            
+            // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+            'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+            // REGISTRO DA 'viewController' M6Ex1 - parte A
+            'market-view-controller' => 'Market\Controller\ViewController',
+            ),
+        
+        // REGISTRO DA 'viewController' M6Ex1 - parte B
+        'factories' => array(
+           'market-post-controller' => 'Market\Factory\PostControllerFactory',
+        ),
+        // M6Ex1  - PARTE D - CRIAR APELIDO PARA URL
+        'aliases' => array(
+           'alt' => 'market-view-controller', 
+        ),
+        
+    ),
+    
+    
+    // VIEW MANAGER
+        'view_manager' => array(
+//        'display_not_found_reason' => true,
+//        'display_exceptions'       => true,
+//        'doctype'                  => 'HTML5',
+//        'not_found_template'       => 'error/404',
+//        'exception_template'       => 'error/index',
+//        'template_map' => array(
+//            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+//            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+//            'error/404'               => __DIR__ . '/../view/error/404.phtml',
+//            'error/index'             => __DIR__ . '/../view/error/index.phtml',
+//        ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+    ),
+    
+    
+);
+--------
+
+
+
+
+Precisamos de alguns ajustes no nosso Controller para o ZF2 encontras as rotas
+
+ARQ: /module/Market/src/Market/Controller/ViewController.php
+-----------------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    public function indexAction() {
+        // PARTE B
+        //return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+        
+        // PARTE C
+        //$category  = $this->params()->fromQuery("category");
+        
+        //M7Ex1 - Parte D
+        $category  = $this->params()->fromRoute("category");
+        
+        return new \Zend\View\Model\ViewModel(array('category'=>$category));  
+    }
+    
+    public function itemAction()
+    {
+        // M6Ex1 - Parte C
+        //$itemId = $this->params()->fromQuery('itemId');
+        
+        //M7Ex1 - Parte D
+        $itemId = $this->params()->fromRoute('itemId');
+        
+        
+        
+        // REDIRECIONA PARA PAGINA 'home' CASO itemId ESTAJA EM BRANCO
+        if(!$itemId){
+            $this->flashMessenger()->addMessage("Item not found");
+            //return $this->redirect()->toRoute('home');
+            return $this->redirect()->toRoute('market');
+        }
+        
+        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+    }
+           
+}
+-----------------
+
+
+
+#### PARTE E - - PARTE ROUTE - UMA ROTA DENTRO DA OUTRA - FINAL
+
+CRIAR UM PADRAO DAS ROTAS - organizando as rotas
+
+ARQ: \module\Market\config\module.config.php
+----------------------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    public function indexAction() {
+        // PARTE B
+        //return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+        
+        // PARTE C
+        //$category  = $this->params()->fromQuery("category");
+        
+        //M7Ex1 - Parte D
+        $category  = $this->params()->fromRoute("category");
+        
+        return new \Zend\View\Model\ViewModel(array('category'=>$category));  
+    }
+    
+    public function itemAction()
+    {
+        // M6Ex1 - Parte C
+        //$itemId = $this->params()->fromQuery('itemId');
+        
+        //M7Ex1 - Parte D
+        $itemId = $this->params()->fromRoute('itemId');
+        
+        
+        
+        // REDIRECIONA PARA PAGINA 'home' CASO itemId ESTAJA EM BRANCO
+        if(!$itemId){
+            $this->flashMessenger()->addMessage("Item not found");
+            //return $this->redirect()->toRoute('home');
+            return $this->redirect()->toRoute('market');
+        }
+        
+        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+    }
+           
+}
+----------------------
+
