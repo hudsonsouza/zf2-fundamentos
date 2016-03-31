@@ -2497,3 +2497,556 @@ class ViewController extends \Zend\Mvc\Controller\AbstractActionController
 }
 ----------------------
 
+
+### MODULO 8 - VIEW
+
+### 8.1 ENTENDENDO A VIEW LAYER
+
+- View layer
+- Layouts
+- PHP Renderer
+- View Helpres
+
+componente ZendView, da camada ZendMvc
+é possivel plugar diversos componentes p plugar outros componentes
+- conteiner de variaveis: variavel que fica disponivel dentro do contesto de visualizacao
+
+- view model: guarda o nosso conteiner de variavel
+define o template e variaveis q serao exibidas
+
+- view models
+sao os modelos das nossas view
+
+
+- renderers
+renderizar a nossa view
+com diversas estrategias
+PHPRender é o padrao
+JSonRender no formato JSon
+FeedRender: gera RSS e AtmFeeds atraves dele
+
+
+- View layer
+	Resolver: possui a logica p resolver o nome do templat
+
+- The View:
+	tem varias estrategia
+	recebe o Request, processa, reenderisa, emite o response
+
+- Render and Response Strategies
+	é um evento q define qual o tipo de Renderizador sera usado
+	JSon
+	PHPRender
+	Content-Type recebe o Reder para enviar para o Response
+	
+- Configuracao da View - out-of-the-box
+	1- seleciona e configura o Resolv Estrategis
+ARQ: \module\Application\config\module.config.php
+------------
+    // VIEW MANAGER
+    'view_manager' => array(
+                'display_not_found_reason' => true,  // MOSTRAR O MOTIVO DO ERRO
+                'display_exceptions'       => true,  // MOSTRA AS MSG DE EXCESSOES ERRO
+                'doctype'                  => 'HTML5',
+                'not_found_template'       => 'error/404',
+                'exception_template'       => 'error/index',
+                'template_map' => array(
+                    'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',  // LAYOUT
+                    'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',  // CAMINHO DA APLICACAO PRINCIPAL
+                    'error/404'               => __DIR__ . '/../view/error/404.phtml',  // PAGINA DE ERRO 404 - NOT FOULD
+                    'error/index'             => __DIR__ . '/../view/error/index.phtml',  // PAGINA ERRO 500
+                ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+    ),
+------------
+
+### VIEW
+View é um compomente
+ViewEvent = evento da View
+
+2 trigger
+- ViewEvent::EVENT_RENDERER  =  processo de rendenizacao
+- ViewEvent:: EVENT_REPONSE  =  quando ja temos o Response pronto(ja processado) para ser enviado ao usuario final
+	
+
+### USO MANUAL
+- criar a ViewModel
+- seta as variaveis
+- especifica os templat
+- retorna a instancia da ViwModel
+
+Como que ZF2 encontra o caminho automaticamente do templat que sera usado
+
+ARQ: /module/Application/src/Application/Controller/IndexController.php
+----------------
+namespace Application\Controller;
+class IndexController extends AbstractActionController
+public function exemploAction(){}
+----------------
+
+Dentro do Controller ele usa o 
+- nome do  namespace : Application  // MODULO
+- 1º nome da classe : IndexController ==> Index  // VIEW
+- 1º nome da funcao : exmploAction ==> exemplo  // ARQUIVO
+	
+	Gerando o caminho completo: 
+	\module\Apllication\view\application\index\exemplo.phtml
+
+-------
+
+	Mas podemos trb na forma manual, passando o caminho manualmente do Templat que queremos usar: setTemplate('\view\application\index\exemplo.phtml')
+
+------------
+    public function exemploAction(){
+        
+        // VARIAVEL
+        $nome = "Mauro Pedreira";
+        $anoAtual = 2016;
+        $anoNasc = 1985;
+        $idade;
+        
+        $idade = $anoAtual - $anoNasc;
+        
+        //return new ViewModel();
+        
+        // PASSANDO CAMINHO MANUALMENTE QUE SERA USADO COMO TEMPLATE
+        $vm = new ViewModel();
+        $vm->setTemplate("\view\application\index\exemplo.phtml");
+        
+        // RETORNA  VARIAVEL NO ARRAY
+        return new ViewModel(array('nome1'=>$nome, 'idade'=>$idade));
+    }
+------------
+
+
+- Return the instance
+	e por ultimo da o retorno com o resultado final do conteudo das nossas variaveis
+	return new ViewModel(array('nome1'=>$nome, 'idade'=>$idade));
+
+
+-----------
+
+View Model
+
+	da forma automatica de caminho para View, o PHPRender sempre espera trb com uma ViewModel
+	há 2 Listener ouvindo o evento
+	
+### LISTENER 1
+	- se SIM nos estivermos passando as variaveis, ele vai retornar a ViewModel injetando esse array associativo n as variaveis de conteiner
+
+	- se nao for passado nenhuma variavel, ele vai criar uma ViewModel sem nenuma variavel atachada e depois a View vai dar um Replace no nosso MvcEvent
+
+### LISTENER 2
+	- se o resultado do MvcEvent + ViewModel tiver um Templat associado, entuam nao precisamod de mais nenhuma acao
+	- se nao, ele forma o nome da ViewModel pegando os nomes em:
+		- nome do  namespace : Application  // MODULO
+		- 1º nome da classe : IndexController ==> Index  // VIEW
+		- 1º nome da funcao : exmploAction ==> exemplo  // ARQUIVO	
+
+			Gerando o caminho completo: 
+			\module\Apllication\view\application\index\exemplo.phtml
+
+
+####### LAYOUT ##########
+
+Existe 2 nomes importantes
+1- Templat
+	é o arquivo de View propriamente dito
+	\module\Apllication\view\application\index\exemplo.phtml
+	
+	
+2- Layout
+	é o arquivo que gera toda nossa apliacao, e injetar o nosso Templat no meio da aplicacao
+	\module\Apllication\layout\layout.phtml
+	
+	este arquivo de layout ja incluiem:
+	- css
+	- js
+	- heder
+	- fooder
+
+# InjectViewModelListever
+	Zend\Mvc\View\InjectModelListener
+	é um Listener especifico que fica ouvindo o Controller, pega o retorno da ViewModel (filha) e vai injetar no Templat Principal (pai), dentro da variavel 'content'
+	
+*** é neste ponto que o conteudo do 
+	View(\module\Apllication\view\application\index\exemplo.phtml) 
+	é injetado dentro do 
+	Layout(\module\Apllication\layout\layout.phtml)	
+	
+ARQ: /module/Application/view/layout/layout.phtml
+-------------
+<div class="col-lg-8">
+    <?php echo $this->content; ?>
+</div>
+-------------	
+	
+OBS: no podemos escolher outro nome de variavel que vai receber o nome da View
+atraves do metodo 'capturaTo()'	
+	
+	
+###### RENDERING & RESPONSE STRATEGIES
+
+Como alternar de Rendenizador como 'renderer strategy' 
+- PHPRender
+- JSonRender
+- Feed
+
+
+Tb temos o 'response strategy' que define quais os tipos de Response que serao retornados juntamente com o rendenizadores 
+Por padrao ele usa o PHPRender
+
+podemos setar de forma manual as nossas respostas, atraves dos metodos
+- addRenderingStrategy()
+- addResponseStrategy()
+
+Exemplo:   
+	
+	$svcMgr->get('View')->addRendereringStrategy($phprenderstrategy);
+	return new ViewModel();
+	
+	$svcMgr->get('View')->addRendereringStrategy($jsonstrategy);
+	return new JsonModel();
+	
+	$svcMgr->get('View')->addRendereringStrategy($feedstrategy);
+	return new FeedModel();
+
+
+########  COMO TRABALHAR COM DIVERSAS ESTRATEGIAS AO MESMO TEMPO
+
+O METODO onBootstrap() para Registrar
+
+---------------------
+public function onBooststrap($e)
+{
+	$app = $e->getApplication()
+			 ->getEventManager()
+			 ->attch('render', array($this,'registerJsonStrategy'), 100);
+}
+
+public function registerjsonStrategy(MvcEvent $e)
+{
+	$locator = $e->getTarget()->getServiceManager();
+	$view = #locator->get('Zend\View\View');
+	$jsonStrategy = $locator->get('ViewJsonstragy');
+	$view->getEventManager()->attach($jsonStrategy, 100);
+}
+---------------------
+
+
+// OUTRA FORMA MAIS SIMPLES DE REGISTRAR A VIEW
+
+ARQ: module/Market/config/module.config.php
+---------
+    // VIEW MANAGER
+    'view_manager' => array(
+                'display_not_found_reason' => true,
+                'display_exceptions'       => true,
+                'doctype'                  => 'HTML5',
+                'not_found_template'       => 'error/404',
+                'exception_template'       => 'error/index',
+                'template_map' => array(
+                    'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+                    'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+                    'error/404'               => __DIR__ . '/../view/error/404.phtml',
+                    'error/index'             => __DIR__ . '/../view/error/index.phtml',
+                ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+        
+        
+        // OUTRA FORMA MAIS SIMPLES DE REGISTRAR A VIEW
+        'strategies' => array(
+                'ViewJsonStrategy','ViewFreedStrategy'
+        ),        
+        
+        
+    ),
+---------
+
+
+
+E RETORNAR A INSTANCIA DO SERVIÇO NO CONTROLLER
+
+ARQ: /module/Application/src/Application/Controller/IndexController.php
+---------
+    public function indexAction()
+    {
+        return new ViewModel();  // PHPRenderer
+        // return new \Zend\View\Model\JsonModel();  // JSonRenderer
+        // return new \Zend\View\Renderer\FeedRenderer;  // FreedRenderer
+    }
+---------
+
+
+####  PHPRenderer - UTILIZAÇÃO
+
+- variaveis de conteiner: que foram passadas na ViewModels
+- Helpers: funcoes prontas para rendenizar coisas de formas mais rapida Ex: htmlList()
+- campos de filtro
+
+PhpRenderer: é um template independente, 
+pode ser mudado de um template para outro, somente fazendo suas novas configuracoes
+
+# Funcionamento:
+
+- insatanciar
+- resolve: vai descobrir onde estao o scripts, arquivos *.phtml para serem renderizado
+
+---------
+use Zend\View\Renderer\PhpRenderer;
+$renderer = new PhpRenderer();
+---------
+
+# Resolver: para passar os metodos para o PhpRenderer, usa o Resolver
+passar os caminhos onde estao os arquivos *.phtml
+Zend\View\Resolver\*
+
+
+- \TemplateMapResolver
+	mapeia os nomes do templates que nos queremos chamar diretamente
+	FORMA MANUAL
+	'template_map' => array(...)  // onde passamos os caminhos fisicos dos arquivos
+	
+
+ARQ: module/Market/config/module.config.php
+---------
+    // VIEW MANAGER
+    'view_manager' => array(
+                'display_not_found_reason' => true,
+                'display_exceptions'       => true,
+                'doctype'                  => 'HTML5',
+                'not_found_template'       => 'error/404',
+                'exception_template'       => 'error/index',
+                'template_map' => array(
+                    'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+                    'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+                    'error/404'               => __DIR__ . '/../view/error/404.phtml',
+                    'error/index'             => __DIR__ . '/../view/error/index.phtml',
+                ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+        
+        
+        // OUTRA FORMA MAIS SIMPLES DE REGISTRAR A VIEW
+        'strategies' => array(
+                'ViewJsonStrategy','ViewFreedStrategy'
+        ),        
+        
+        
+    ),
+---------
+
+
+
+
+
+
+
+
+
+- \TemplatePathStack
+	FORMA AUTOMATICA
+	para funcionar de forma automatica
+	
+ARQ: module/Market/config/module.config.php	
+-------------
+    // VIEW MANAGER
+    'view_manager' => array(
+                'display_not_found_reason' => true,
+                'display_exceptions'       => true,
+                'doctype'                  => 'HTML5',
+                'not_found_template'       => 'error/404',
+                'exception_template'       => 'error/index',
+                'template_map' => array(
+                    'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+                    'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+                    'error/404'               => __DIR__ . '/../view/error/404.phtml',
+                    'error/index'             => __DIR__ . '/../view/error/index.phtml',
+                ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+        
+        // AUTOMATICO - REGISTRAR VIEW/TEMPLATE
+        'template_path_stack' => array(
+            __DIR__.'/../view',
+        ),
+        
+        // MANUAL - OUTRA FORMA MAIS SIMPLES DE REGISTRAR A VIEW/TEMPLAT
+        'strategies' => array(
+                'ViewJsonStrategy','ViewFreedStrategy'
+        ),        
+    ),
+-------------
+
+- \AggregateResolver
+	Attachar uma fila onde ele pode encontrar os Templates
+	ele disponibiliza uma fila com endereco de arquuivo fisico, 
+	para aprimorar a performace da busca MANUAL e AUTOMATICA dos Templates
+	- TemplateMapResolver
+	- TemplatePathstack
+	
+	
+######   CONFIGURACAO PhpRenderer
+Zend\View\Renderer\PhpRenderer
+
+- HelperPluginManager
+	setHelperPluginManager(string|HelperPluginManager $helpers);
+	also 'get'
+	
+- resolver
+	setResolver(Zend\View\Resolver $resolver);
+	
+- filters
+	setFilterChain(Zend\Filter\FilterChain $filters);
+	
+- canRenderTrees
+	setCanTenderTrees(bool $canRenderTrees);
+	
+	
+	
+OUTROS METODOS ADICIONAIS	
+	
+- render()
+	render(string|Zend\View\Model $nameOrModel, $values = null);
+	busca atraves de uma string do caminho do renderizador
+	
+- resolver()	
+	resolver();
+	resolve dentro da lista de caminhos dos arquivos, qual arq ele vai utilizar
+	
+plugin()
+	plugin(string $nome, array $option = null);
+	define qual o plugin sera utilizado
+	
+	
+COMO CHAMAR UMA VARIAVEL
+
+dentro do PhpRenderer, o THIS se refere sempre se refere ao PhpRendere
+
+$this->nome;
+É O MESMO QUE
+Phprenderer->nome;
+
+
+$this->vars()->name;
+POSSUI UM ALIAS PARA
+$this->name;
+
+
+
+##### VIEW HELPERS
+
+já existe muitas View Helpres, que o ZF2 traz por padrao
+Helpers é um Plugin ja pronto para gerar tarefas repetitivas, Ex: htmlList()
+
+Helper implementa uma HelperInterface
+que possui 2 metodos:
+- setView();
+	Zend\View\Renderer
+
+- getView();
+
+
+ViewHelpere que ja existem por padrao no ZF2:
+- Action View Helper		
+- BasePath Helper			achar os caminhos 
+- Placeholder Helper 		
+- Doctype Helper
+- HTML Object Helper
+- HeadLink Helper			css
+- HeadMeta Helper
+- HeadStyle Helper
+- HeadTitle Helper
+- Inline Script Helper
+
+
+COMO CHAMAR A HELPER
+
+// VIA PLUGIN MANAGER  // JEITO MAIS LONGO
+$plugins = $view->gethelperPluginManager();
+$helper = $plugins->get('lowercase');
+
+// VIA INSTANCIA DO HELPER  // JEITO MAIS CURTO, FUNCIONA IGUAL  
+$helper = $view->plugin('lowercase');
+
+// SE O HELPER NAO ESTIVER DEFINIDO NO __INVOKE()
+$helper = $view->lowercase();
+
+// SE O HELPER NAO ESTIVER DEFINIDO NO __INVOKE()
+$filtered = $view->lowercase('Mauro Pedreira');  // USAR ESTE ***
+
+
+
+### VIEW HELPER / SEGURANÇA
+
+a politica de segurança do ZF2 é muito criteriosa, quanto a politica de boas praticas de programacao e seguranca
+
+No case de imprimir o conteudo de uma variavel
+RUIM
+	echo $this->nome;
+
+BOM
+	echo $this->escapeHtml($this->nome);
+
+
+OUTROS ESCAPES
+- scapeCss()
+	<?php echo $this->escapeCss('<style>b { color: red; }</style>'); ?>
+
+- escapeHtmlAttr()
+	<?php echo $this->escapeHtml('<bad>tag</bad>!@#$%&*'); ?>
+
+- escapeJs()
+	</php echo $this->escapeJs('<script>alert("Hello Word!");</script>'); ?>
+
+- escapeUrl()
+	<?php echo $this->escapeUrl('http://zend.com/name=Mauro&id=123'); ?>
+
+
+
+### COMO CRIAR E REGISTRAR UM HELPER
+
+ARQ:  Guestbook\Service\HtmlTableRowhelper
+----------
+class HtmlTableRowHelper extendes AbstractHtmlElement
+{
+	public function __invoke(array $items)
+	{
+		$output = '';
+		forech($items as $value){
+			$output .= '<td>' . htmlspecialchars($value)  . '</td>'
+		}
+		return '<td>' . $output . '</tr>' . PHP_EQL;
+	}
+}
+----------
+
+
+
+ARQ: module.config.php
+----------
+'view_helper' => array(
+	'invokables' => array(
+		'htmlTableRow' => 'Guestbook\Service\HtmltableRowHelper',
+	),
+),
+----------
+
+
+ARQ: view script
+----------
+<?php 
+	echo $this->htmlTableRow(array($entry->getName(),
+								   $entry->getMail(),
+								   $entry->getWebsite(),
+								   $entry->getMessage()
+								  )
+							 );
+?>
+----------
