@@ -2403,48 +2403,48 @@ return array(
 
 Precisamos de alguns ajustes no nosso Controller para o ZF2 encontras as rotas
 
-ARQ: /module/Market/src/Market/Controller/ViewController.php
+ARQ: module/Market/src/Market/Controller/ViewController.php
 -----------------
 <?php
-
-namespace Market\Controller;
-
-class ViewController extends \Zend\Mvc\Controller\AbstractActionController
-{
-    public function indexAction() {
-        // PARTE B
-        //return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
-        
-        // PARTE C
-        //$category  = $this->params()->fromQuery("category");
-        
-        //M7Ex1 - Parte D
-        $category  = $this->params()->fromRoute("category");
-        
-        return new \Zend\View\Model\ViewModel(array('category'=>$category));  
-    }
-    
-    public function itemAction()
-    {
-        // M6Ex1 - Parte C
-        //$itemId = $this->params()->fromQuery('itemId');
-        
-        //M7Ex1 - Parte D
-        $itemId = $this->params()->fromRoute('itemId');
-        
-        
-        
-        // REDIRECIONA PARA PAGINA 'home' CASO itemId ESTAJA EM BRANCO
-        if(!$itemId){
-            $this->flashMessenger()->addMessage("Item not found");
-            //return $this->redirect()->toRoute('home');
-            return $this->redirect()->toRoute('market');
-        }
-        
-        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
-    }
-           
-}
+ 
+ namespace Market\Controller;
+ 
+ class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+ {
+     public function indexAction() {
+         // PARTE B
+         //return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+         
+         // PARTE C
+         //$category  = $this->params()->fromQuery("category");
+         
+         //M7Ex1 - Parte D
+         $category  = $this->params()->fromRoute("category");
+         
+         return new \Zend\View\Model\ViewModel(array('category'=>$category));  
+     }
+     
+     public function itemAction()
+     {
+         // M6Ex1 - Parte C
+         //$itemId = $this->params()->fromQuery('itemId');
+         
+         //M7Ex1 - Parte D
+         $itemId = $this->params()->fromRoute('itemId');
+         
+         
+         
+         // REDIRECIONA PARA PAGINA 'home' CASO itemId ESTAJA EM BRANCO
+         if(!$itemId){
+             $this->flashMessenger()->addMessage("Item not found");
+             //return $this->redirect()->toRoute('home');
+             return $this->redirect()->toRoute('market');
+         }
+         
+         return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+     }
+            
+ }
 -----------------
 
 
@@ -2453,6 +2453,8 @@ class ViewController extends \Zend\Mvc\Controller\AbstractActionController
 
 CRIAR UM PADRAO DAS ROTAS - organizando as rotas
 
+
+ROTAS ANINHAS - CONFIGURACAO - novo
 ARQ: \module\Market\config\module.config.php
 ----------------------
 <?php
@@ -2496,6 +2498,186 @@ class ViewController extends \Zend\Mvc\Controller\AbstractActionController
            
 }
 ----------------------
+
+
+
+
+ROTAS ANINHADAS - novo
+ARQ: module/Market/config/module.config.php
+---------------------
+<?php
+
+/*
+### CONTROLE DE ROTAS - M7Ex1
+routes(
+    home()
+        market(
+            view(
+                main()
+                item()
+            )
+            post()
+        )
+)
+*/
+
+ return array(
+    
+     // CONTROLE DAS ROTAS - URL
+     
+    'router' => array(  // ROUTER
+          
+        'routes' => array(  // ROUTES
+     
+            
+            // M7Ex1 - PARTE A
+            'home' => array(  // ROTA 0
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+            ), // fim ROTA 0
+            
+            
+             // M7Ex1 - PARTE B
+            'market' => array( // ROTA 1 - PAI
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/market',
+                    'defaults' => array(
+                        'controller' => 'market-index-controller',
+                        'action' => 'index',
+                    ),
+                ),
+             
+           
+                'may_terminate' => true,
+                'child_routes' => array(  // FILHA 1
+                    
+                // VIEW
+                'view' => array(  // FILHA 1.1
+                    'type' => 'Literal',
+                    'options' => array(
+                        'route' => '/view',
+                        'defaults' => array(
+                            'controller' => 'market-view-controller',
+                            'action' => 'index',
+                        ),
+                    ),                    
+                  
+                    'may_terminate' => true,
+                    'child_routes' => array(  // FILHA 2
+                    
+                        // MAIN
+                        'main' => array(
+                            'type'    => 'Segment',
+                            'options' => array(
+                                //'route'    => '/[:controller[/:action]]',
+                                'route'    => '/main[/:category]',
+                                //  'constraints' => array(
+                                //  'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                //  'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                //  ),
+                                'defaults' => array(
+                                    'action' => 'index',
+                                ),
+                            ),
+                        ),
+
+                        
+                        // ITEM
+                        'item' => array(
+                            'type'    => 'Segment',
+                            'options' => array(
+                                'route'    => '/item[/:itemId]',
+                                'defaults' => array(
+                                    'action' => 'item',
+                                ),
+                                'constraints' => array(
+                                    'itemId' => '[0-9]*',
+                                ),                            
+                            ),
+                        ),                         
+   
+                    ),  // fim FILHA 2
+                    
+                ),  // fim FILHA 1.1    
+                    
+                    
+                // POST
+                // M7Ex1 - PARTE C
+                'post' => array(  // FILHA 1.2
+                     'type' => 'Literal',
+                     'options' => array(
+                         'route' => '/post',
+                         'defaults' => array(
+                             'controller' => 'market-post-controller',
+                             'action' => 'index',
+                         ),
+                     ),
+                 ),  // fim FILHA 1.2                
+    
+                ), // fim FILHA 1
+                 
+            ),  // fim ROTA 1 - PAI      
+    
+        ), // fim ROUTES
+     
+    ),  // fim ROTER
+    
+     
+     // SM - REGISTRO DO SERVICO
+     'controllers' => array(
+         'invokables' => array(  // TIPO DO SERVICO
+             // NOME DO SERVICO        /  CAMINHO DA CLASSE
+             //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+             
+             // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+             'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+             // REGISTRO DA 'viewController' M6Ex1 - parte A
+             'market-view-controller' => 'Market\Controller\ViewController',
+             ),
+         
+         // REGISTRO DA 'viewController' M6Ex1 - parte B
+         'factories' => array(
+            'market-post-controller' => 'Market\Factory\PostControllerFactory',
+         ),
+         // M6Ex1  - PARTE D - CRIAR APELIDO PARA URL
+         'aliases' => array(
+            'alt' => 'market-view-controller', 
+         ),
+         
+     ),
+     
+     
+     // VIEW MANAGER
+         'view_manager' => array(
+ //        'display_not_found_reason' => true,
+ //        'display_exceptions'       => true,
+ //        'doctype'                  => 'HTML5',
+ //        'not_found_template'       => 'error/404',
+ //        'exception_template'       => 'error/index',
+ //        'template_map' => array(
+ //            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+ //            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+ //            'error/404'               => __DIR__ . '/../view/error/404.phtml',
+ //            'error/index'             => __DIR__ . '/../view/error/index.phtml',
+ //        ),
+         'template_path_stack' => array(
+             __DIR__ . '/../view',
+         ),
+     ),
+ 
+ );
+---------------------
+
+
+
+
 
 
 ### MODULO 8 - VIEW
@@ -3050,3 +3232,374 @@ ARQ: view script
 							 );
 ?>
 ----------
+
+#######################
+
+### 8.3 RESOLUÇÃO M8Ex1
+
+# PARTE A
+ARQ: module/Market/src/Market/Controller/IndexController.php
+---------
+<?php
+namespace Market\Controller;
+//use \Zend\Mvc\Controller\AbstractActionController;
+//use \Zend\View\Model\ViewModel;
+
+class IndexController extends \Zend\Mvc\Controller\AbstractActionController {
+    
+    public function indexAction() 
+    {
+        $messages = array();
+        if($this->flashMessenger()->hasMessages()){
+            $messages = $this->flashMessenger()->getMessages();
+        }
+        
+        // M8Ex1 - Parte A
+        return array('messages'=>$messages);
+        //return new \Zend\View\Model\ViewModel(array('messages'=>$messages));
+    }
+    
+    public function fooAction(){
+        return new ViewMofel();
+    }
+}
+
+---------
+
+
+### PARTE B
+
+ARQ: /module/Market/src/Market/Controller/PostController.php
+------------
+<?php
+// M6Ex1 - Parte B
+namespace Market\Controller;
+
+class PostController extends \Zend\Mvc\Controller\AbstractActionController 
+{
+    public $categories;
+    
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+    }
+    
+    public function indexAction() {
+        // M8Ex1 - Parte B
+        $viewModel = new \Zend\View\Model\ViewModel(array('categories'=>$this->categories));
+        // PASSA O TEMPLAT MANUALMENTE
+        $viewModel->setTemplate("market/post/invalid.phtml");
+        
+        return $viewModel;
+        //return new \Zend\View\Model\ViewModel(array('categories'=>$this->categories));
+    }
+}
+
+------------
+
+
+### PARTE C
+
+Falha de segurança
+esta passando formatacao pelo URL
+tb poderia ser um codigo malicioso
+
+
+NORMAL:
+http://localhost:8888/market/view/main/TEST
+TEST  // NORMAL PRETO SEM NEGRITO
+
+RACKEADO:
+http://localhost:8888/market/view/main/<b style="color:red;">TEST
+TEST  // NEGRITO + VERMELHO
+
+
+ARRUMADO:
+
+ARQ: module/Market/view/market/view/index.phtml
+-----------
+<?php 
+    // M8Ex1 - PARTE C - FALHA DE SEGURANÇA - VARIAVEL NAO TRATADA: ESCAPE
+    //echo "<h1>".$this->category."</h1>";   
+    
+    // VARIAVEL TRATADA COM - ESCAPE
+    echo "<h1>".$this->escapeHtml($this->category)."</h1>";   
+?>
+-----------
+
+Testando
+http://localhost:8888/market/view/main/<b style="color:red;">TEST
+<b style="color:red;">TEST
+
+VAI MOSTRAR NA TELA O CODIGO HTML
+MAIS NAO SERA PROCESSADO ESTE CODIGO MALICIOSO
+
+
+### PARTE D - criar uma CustomViewHelper
+
+1- criar uma pasta
+PASTA: module\Application\Helper
+
+2- criar uma Classe
+ARQ: module\Application\Helper\LeftLinks.php
+---------
+<?php
+
+namespace Application\Helper;
+
+class LeftLinks extends \Zend\View\Helper\AbstractHelper {
+
+    // METODO MAGICO __invoke()
+    // CHAMADA DO METODO É FEITO ASSIM: LeftLinks();
+    public function __invoke(array $values, $urlPrefix)
+    {
+        $html = '<ul style="list-style-type: none;">'.PHP_EOL;
+        foreach ($values as $item){
+            $html.= sprintf("<li><a href=\"%s/%s\">%s</a></li>\n", 
+                            $urlPrefix, 
+                            $item, 
+                            $item
+                           );
+        }
+        $html.="</ul>".PHP_EOL;
+        return $html;
+    }
+   
+}
+---------
+
+3- REGISTRAR O HELPER
+ARQ: module/Application/config/module.config.php
+---------
+<?php
+
+/**
+ * Zend Framework (http://framework.zend.com/)
+ *
+ * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
+ * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ */
+
+namespace Application;
+
+return array(
+    'router' => array(
+        'routes' => array(
+            'home' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route' => '/',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'index',
+                    //'action'     => 'exemplo',
+                    ),
+                ),
+            ),
+            // The following is a route to simplify getting started creating
+            // new controllers and actions without needing to create a new
+            // module. Simply drop new controllers in, and you can access them
+            // using the path /application/:controller/:action
+            'application' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/application',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'Application\Controller',
+                        'controller' => 'Index',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/[:controller[/:action]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ),
+    'service_manager' => array(
+//        // REGISTRO DO SERVICO - DE PREFERENCIA AKI
+//        'invokables' => array(
+//            'ExemploService' => 'Application\Service\ExemploService',
+//        ),
+        // M4Ex1 - Faze 1 - Registrar um Servico
+        'services' => array(// CRIAR UM ARRAY DE 'TIPO DE SERVICES'
+            'categories' => array(// NOME DO SERVICO
+                'bartes', // CONTEUDO DO ARRAY 
+                'beauty',
+                'clothing',
+                'computer',
+                'entertainment',
+                'free',
+                'garden',
+                'general'
+            )
+        ),
+        'abstract_factories' => array(
+            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
+            'Zend\Log\LoggerAbstractServiceFactory',
+        ),
+        'factories' => array(
+            'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',
+        ),
+    ),
+    'translator' => array(
+        'locale' => 'en_US',
+        'translation_file_patterns' => array(
+            array(
+                'type' => 'gettext',
+                'base_dir' => __DIR__ . '/../language',
+                'pattern' => '%s.mo',
+            ),
+        ),
+    ),
+    'controllers' => array(
+        'invokables' => array(
+            'Application\Controller\Index' => Controller\IndexController::class
+        ),
+    ),
+    'view_manager' => array(
+        'display_not_found_reason' => true,
+        'display_exceptions' => true,
+        'doctype' => 'HTML5',
+        'not_found_template' => 'error/404',
+        'exception_template' => 'error/index',
+        'template_map' => array(
+            'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+            'error/404' => __DIR__ . '/../view/error/404.phtml',
+            'error/index' => __DIR__ . '/../view/error/index.phtml',
+        ),
+        'template_path_stack' => array(
+            __DIR__ . '/../view',
+        ),
+        'strategies' => array(
+            'ViewJsonStrategy', 'ViewFeedStrategy',
+        ),
+    ),
+    
+    // M8Ex1 - Parte D - Registrando Helper
+    'view_helpers' => array(
+        'invokables' => array(
+            'leftLinks' => 'Application\Helper\LeftLinks'
+        )
+    ),
+    
+    // Placeholder for console routes
+    'console' => array(
+        'router' => array(
+            'routes' => array(
+            ),
+        ),
+    ),
+    
+);
+---------
+
+4- LAYOUT 
+vamos substituir HtmlList da ViewHelper
+arq: module/Application/view/layout/layout.phtml
+---------
+        <div class="container">
+            <div class="col-lg-2">
+                <!-- 
+                M4Ex1 - Fase 3 - Fazer um Forech para ler o conteudo do array "categories"
+                <?php  // echo $this->categories; ?>
+                -->
+                
+                <!-- USANDO VIEW-HELPER HTMLIST  -->
+                <h4>Categories HTMLList:</h4>
+                <?php // echo $this->htmllist($this->categories); ?>
+                <!-- M8Ex1 - Parte D -->
+                <?php // echo $this->leftLinks($this->categories, $this->basepath().'/market/view/main'); ?>
+                <?php  echo $this->leftLinks($this->categories, $this->basepath().'/market/view/main'); ?>
+                
+                
+                <!-- USANDO FORECH PARA IMPRIMIR O CONTEUDO DO ARRAY "categories" --> 
+                <h4>Categories Forech:</h4>
+                <ul>
+                <?php  foreach($this->categories as $category):  ?>
+                    <li> <?php  echo $category ?> </li>  
+                <?php  endforeach; ?>
+                </ul>
+
+            </div>
+            <div class="col-lg-8">
+                <?php echo $this->content; ?>
+            </div>
+            <hr>
+        </div>
+---------
+
+
+####  PARTE E
+COLOCAR 
+
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/ViewController.php
+----------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    public function indexAction() {
+        // PARTE B
+        //return new \Zend\View\Model\ViewModel(array('category'=>'category postings'));
+        
+        // PARTE C
+        //$category  = $this->params()->fromQuery("category");
+        
+        //M7Ex1 - Parte D e E
+        $category  = $this->params()->fromRoute("category");
+        
+        return new \Zend\View\Model\ViewModel(array('category'=>$category));  
+    }
+    
+    public function itemAction()
+    {
+        // M6Ex1 - Parte C
+        //$itemId = $this->params()->fromQuery('itemId');
+        
+        //M7Ex1 - Parte D
+        $itemId = $this->params()->fromRoute('itemId');
+        
+        
+        
+        // REDIRECIONA PARA PAGINA 'home' CASO itemId ESTAJA EM BRANCO
+        if(!$itemId){
+            $this->flashMessenger()->addMessage("Item not found");
+            //return $this->redirect()->toRoute('home');
+            return $this->redirect()->toRoute('market');
+        }
+        
+        return new \Zend\View\Model\ViewModel(array('itemId'=>$itemId));
+    }
+           
+}
+----------
+
+
+
+
+
+
+
+
+
+
+
+
+
