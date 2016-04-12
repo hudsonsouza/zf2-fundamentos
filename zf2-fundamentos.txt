@@ -3591,11 +3591,118 @@ class ViewController extends \Zend\Mvc\Controller\AbstractActionController
 }
 ----------
 
+#######################
 
 
+### MODULO 9 - FILTERS, VALIDATORS E FORMS
+
+### 9.1 FILTERS, VALIDATORS E FORMS
+
+- Zend\InputFilter
+Validator
+Filter
+Form
+Forma/View/Helper
+Stdlib/Hydrator
+
+# Zend\InputFilter
+Higienizador: 
+	limpa espaço em branco
+	plv maiuculo
+	plv minusculo
+	
+componente que age como uma familia
+utilizado para higienizar, os dados que recebemos requisicao, por GET, POST,  CLI "terminal"  , É POSSIVEL validar estes dados
+- Input= armazena o dado de entrada
+- InputFilter = container de filtros
+
+SetData() =   passa os dados para InputFilter
+os dados tem q ser um Array ou um transversable
+
+# Zend\Validator
+Validados:
+	codigo de barra certo
+	num cpf correto
+	email valido
+	alfanumerico
+	numerico
+	data
+	tamanho da string
+	
+componente que valida o dados que esta entrando, se esta correto
+
+# Validator Methods
+	attaach
+	group
+	
+// parametro individual - input filter
+$filterInput->setValidationGroup('email', 'password');
+
+// array  de parametro
+$filterInput->setValidationGroup(array('email', 'password'));
+
+---------
+use Zand\InputFilter\InputFilter;
+use Zend\InputFilter\Input;
+use Zend\Validator;
+
+// INSTANCIA DE VALIDADOR
+$email = new Input('email');
+$email->getValidatorChain()
+	  ->attach(new Validator\EmailAddress());
+	  
+// CHAMO O VALIDADOR PELO NOME, É PASSO PARAMETROS, MINIMO 8 CARACTERES
+$password = new Input('password');
+$password->getValidatorChain()
+		 attachByNome('StringLength', array('options'=>array('min'=>8)));
 
 
+// RECEBO UMA FAMILIA DE FILTERS		 
+$inputFilter = new InputFilter();
+$inputFilter->add($email)  // NOME DO CAMPO
+			->add($password)  // NOME DO CAMPO
+			->setDate(&_POST);  // FORMA DE ENVIO: GET / POST
+			
+// VALIDA TODOS OS DADOS DO FORMULARIO
+if($inputFilter->isValid()){
+	echo "Dados dos formulário são Validos!\n";
+} else {
+	echo "Dados dos formulário Invalidos!\n";
+	print_r (&inputFilter->getMessages());  // RETORNA MSG DE ERRO DE DADOS DO CAMPO
+}
+---------
 
+
+### FILTER via Factory
+
+---------
+use Zend\InputFilter\Factory;
+
+$factory = new Factory();
+$inputFilter = $factory->createinputFilter(
+	array(
+		'password' => array(
+			'name' => 'password',		// NOME DO CAMPO
+			'required' => true,			// OBRIGRATORIO
+			'validators' => array(
+				'name' => 'notempty',	// NAO TER ESPAÇO EM BRANCO
+			),
+			array(
+				'name' => 'stringlength',	// FILTRO TAMANHO CARACTER
+				'options' => array(
+					'min' => 8				// TAMANHO DA QTD DE CARACTER
+				),
+			),
+		),
+	)
+);
+
+$inputFilter->setData($_POST);  // DADOS RECEBIDOS VIA POST
+echo $inputFilter->isValid() ? "Formuário Válido" : "Formulário Inválido";  // VALIDA FORMULARIO
+---------
+
+### ZEND\FORM
+21min
 
 
 
