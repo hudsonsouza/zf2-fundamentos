@@ -3756,7 +3756,7 @@ class PostForm extends \Zend\Form\Form
         
         $title = new \Zend\Form\Element\Text('title');
         $title->setLabel("Title")
-              ->setAttribute(array('size'=>25, 'maxLength'=>128))
+              ->setAttributes(array('size'=>25, 'maxLength'=>128))
         ;
         
         
@@ -3771,7 +3771,6 @@ class PostForm extends \Zend\Form\Form
     }
   
 }
-
 ----------
 
 
@@ -3802,10 +3801,12 @@ class PostFormFactory implements \Zend\ServiceManager\FactoryInterface
         $form->setCategories($categories);  // RECEBE AS CATEGORIES
         $form->buildForm();  // EXECUTAR O METODO PARA REGISTRAR  OS ELEMENTOS E CONSTRUIR O FORMULARIO
         
+        // PASSA O FILTRO QUE FOI CRIADO MANUALMENTE PARA DENTRO DO FORMULARIO
+        $form->setInputFilter($sm->get('market-post-filter'));
+        
         return $form;
     }
 }
-
 ---------
 
 
@@ -3816,28 +3817,46 @@ ARQ: /var/www/workspace/onlinemarket.work/module/Market/config/module.config.php
 ---------
      // REGISTRO DA 'viewController' M9Ex1 - parte A     
      'service_manager' => array(
-         'factories' => array(
-             'market-post-form' => 'Market\Factory\PostFormFactory'
-         )
-     ),
+         'factories' => array(             'market-post-form' => 'Market\Factory\PostFormFactory',
+             // M9Ex1 - parte C - REGISTRO
+             'market-post-filter' => 'Market\Factory\PostFilterFactory'
+           )
+       ),
 ---------
 
 
 4- Configurar o PostControler
 ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/PostController.php
 ---------
-    public function indexAction() {
+    public function indexAction() {   
         
         // M9Ex1 - Parte A
         $data = $this->params()->fromPost();
-        $this->postForm->setData($data);
+        // $this->postForm->setData($data);
         $viewModel = new \Zend\View\Model\ViewModel(array('postForm'=>$this->postForm, 'data'=>$data));
+        // ADD ESTA view COMO FILHA DA InvalidView
+        $viewModel->setTemplate('market/post/index.phtml');
         
+        // M9Ex1 - Parte D  -  14m30
+        // VERIFICAR SE A REQUISICAO QUE ESTAMOS RECEBENDO É UM 'POST'
+        if($this->getRequest()->isPost()){
+            $this->postForm->setData($data);
+            
+            if($this->postForm->isValid()){  // VERIFICA SE É VALIDO
+                $this->flashMessenger()->addMessage("Thanks for posting!");
+                $this->redirect()->toRoute('home');
+            } else {  // SE FOR INVALIDO
+                $invalidView = new \Zend\View\Model\ViewModel();
+                $invalidView->setTemplate('market/post/invalid.phtml');
+                $invalidView->addChild($viewModel, 'main');
+                return $invalidView;
+            }
+        }
         
         // M8Ex1 - Parte B
         // $viewModel = new \Zend\View\Model\ViewModel(array('categories'=>$this->categories));
         // PASSA O TEMPLAT MANUALMENTE
-        $viewModel->setTemplate("market/post/invalid.phtml");
+        // $viewModel->setTemplate("market/post/invalid.phtml");
         
         return $viewModel;
         //return new \Zend\View\Model\ViewModel(array('categories'=>$this->categories));
@@ -3872,7 +3891,6 @@ class PostControllerFactory implements \Zend\ServiceManager\FactoryInterface
         return $postController;
     }
 }
-
 ----------------
 
 ### MEx1 - Parte B
@@ -3898,7 +3916,7 @@ ARQ: index.phtml
 <?php $this->postForm->prepare(); ?>  <!-- PREPARAR O FORM, PARA RESOLVER QLQ TIPO DEPENDENCIA -->
 <?php echo $this->form()->openTag($this->postForm); ?>    <!-- ECHO openTag()() -->
 <?php echo $this->formCollection($this->postForm); ?>    <!-- GERAR TODO FORMULARIO AUTOMATICAMENTE -->
-<?php echo $this->form()->closeTag(); ?>    <!-- FECHAR closeTag() -->
+<?php echo $this->form()->closeTag(); ?>    <!-- FECHAR closeTag() - Tag de Formulario -->
 
 <!-- ZEND DEBUG -->
 <?php Zend\Debug\Debug::dump($this->data); ?>
@@ -3926,7 +3944,7 @@ ARQ: /var/www/workspace/onlinemarket.work/module/Application/view/layout/layout.
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
-                        <!-- M9Ex1 - Parte C - novo menu -->
+                        <!-- M9Ex1 - Parte B - novo menu -->
                         <li><a href="<?php echo $this->url('market/post') ?>">New Post</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
@@ -3940,7 +3958,278 @@ http://localhost:8888
 http://localhost:8888/market/post
 
 
+### M9Ex1 - Parte C e D
+
+### Parte C
+
+vamos trb com os Filtros, dentro da pasta Form
+
+crie uma classe: PostFilter
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Form/PostFilter.php
+----------
+<?php
+
+namespace Market\Form;
+
+class PostFilter extends \Zend\InputFilter\InputFilter
+{
+
+    private $categories;
+    
+    // SETs / GETs
+    public function setCategories($categories){
+        $this->categories  = $categories;
+    }
+    
+    // CRIAR OS ELEMENTOS DE FILTROS
+    public function buildFilter()
+    {
+        // CRIAR DIVERSOS INPUTs PARA ADD FILTORS
+        $category = new \Zend\InputFilter\Input('category');
+        $category->getFilterChain()
+                 ->attachByName('StringTrim')  // TIRA ESPACO EM BRANCO
+                 ->attachByname('StripTags')  // RETIRA QLQ CARACTER ESPECIAL
+                 ->attachByName('StringToLower')  // CONVERTE PARA MINUSCULO
+        ;
+        
+        $category->getValidatorChain()  // ITEM DE SEGURANCA
+                 ->attachByName('InArray', array('haystack'=>$this->categories) );  // OBRIGA OS DADOS A SEREM PASSADO POR ARRAY, PARA SEREM VALIDADOS
+         
+        
+        $title = new \Zend\InputFilter\Input('title');
+        $title->getFilterChain()
+              ->attachByName('StringTrim')
+              ->attachByName('StripTags')
+        ;
+        
+        $titleRegex = new \Zend\Validator\Regex(array('pattern'=>'/^[a-zA-Z0-9 ]*$/'));
+        $titleRegex->setMessage('Title should only contein: numbers, letters or spaces!');
+                        
+        $title->getValidatorChain()
+              ->attach($titleRegex)
+              ->attachByName('Stringlength', array('min'=>1, 'max'=>128))
+        ;
+        
+        // INSERIR DENTRO DO 'InputFilter'
+        $this->add($category)
+             ->add($title)
+        ;
+        
+    }
+    
+}
+----------
+
+
+Criar uma Classe de Filtro
+
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/PostFilterFactory.php
+--------
+<?php
+
+namespace Market\Factory;
+
+class PostFilterFactory implements \Zend\ServiceManager\FactoryInterface
+{
+
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $sm) {
+        $filter = new \Market\Form\PostFilter();
+        $filter->setCategories($sm->get('categories'));
+        $filter->buildFilter();  // GERAR TODOS OS CAMPOS AUTOMATICAMENTE
+        return $filter;
+    }
+
+}
+
+--------
+
+Registrar o Serviço Filter
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/config/module.config.php
+-------
+     // REGISTRO DA 'viewController' M9Ex1 - parte A     
+     'service_manager' => array(
+         'factories' => array(
+             'market-post-form' => 'Market\Factory\PostFormFactory',
+             // M9Ex1 - parte C - REGISTRO
+             'market-post-filter' => 'Market\Factory\PostFilterFactory'
+         )
+     ),
+-------
+
+Atribuir o InputFilter que nos criamos manualmente, a este fonrmulario
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/PostFormFactory.php
+--------
+<?php
+
+namespace Market\Factory;
+
+class PostFormFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    // METODO OBRIGATORIO
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $sm) 
+    {
+        // INGETAR DEPENDENCIA
+        $categories = $sm->get('categories');
+        
+        // M9Ex1 - Parte A
+        $form = new \Market\Form\PostForm(); // INSTANCIA
+        $form->setCategories($categories);  // RECEBE AS CATEGORIES
+        $form->buildForm();  // EXECUTAR O METODO PARA REGISTRAR  OS ELEMENTOS E CONSTRUIR O FORMULARIO
+        
+        // PASSA O FILTRO QUE FOI CRIADO MANUALMENTE PARA DENTRO DO FORMULARIO
+        $form->setInputFilter($sm->get('market-post-filter'));
+        
+        return $form;
+    }
+}
+
+--------
+
+
+### PARTE D
+
+Verificar se os dados enviados sao ou nao validos
+
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/PostController.php
+-----------
+<?php
+// M6Ex1 - Parte B
+namespace Market\Controller;
+
+class PostController extends \Zend\Mvc\Controller\AbstractActionController 
+{
+    public $categories;
+    
+    // ----------------
+    // M9Ex1 - Parte B
+    private $postForm;
+    
+    public function setPostForm($postForm)
+    {
+        $this->postForm  = $postForm;
+    }
+    // ----------------
+    
+    public function setCategories($categories)
+    {
+        $this->categories = $categories;
+    }
+    
+    public function indexAction() {   
+        
+        // M9Ex1 - Parte A
+        $data = $this->params()->fromPost();
+        // $this->postForm->setData($data);
+        $viewModel = new \Zend\View\Model\ViewModel(array('postForm'=>$this->postForm, 'data'=>$data));
+        // ADD ESTA view COMO FILHA DA InvalidView
+        $viewModel->setTemplate('market/post/index.phtml');
+        
+        // M9Ex1 - Parte D  -  14m30
+        // VERIFICAR SE A REQUISICAO QUE ESTAMOS RECEBENDO É UM 'POST'
+        if($this->getRequest()->isPost()){
+            $this->postForm->setData($data);
+            
+            if($this->postForm->isValid()){  // VERIFICA SE É VALIDO
+                $this->flashMessenger()->addMessage("Thanks for posting!");
+                $this->redirect()->toRoute('home');
+            } else {  // SE FOR INVALIDO
+                $invalidView = new \Zend\View\Model\ViewModel();
+                $invalidView->setTemplate('market/post/invalid.phtml');
+                $invalidView->addChild($viewModel, 'main');
+                return $invalidView;
+            }
+        }
+        
+        // M8Ex1 - Parte B
+        // $viewModel = new \Zend\View\Model\ViewModel(array('categories'=>$this->categories));
+        // PASSA O TEMPLAT MANUALMENTE
+        // $viewModel->setTemplate("market/post/invalid.phtml");
+        
+        return $viewModel;
+        //return new \Zend\View\Model\ViewModel(array('categories'=>$this->categories));
+    }
+}
+-----------
+
+VIEW
+ARE: /var/www/workspace/onlinemarket.work/module/Market/view/market/post/invalid.phtml
+-------
+<!-- // EXERCICIO ANTERIOR
+<h1>Post Controller</h1>
+<?php // Zend\Debug\Debug::dump($this->categories); ?>
+-->
+
+<!-- M9Ex1 - Parte D -->
+<?php echo $this->main ?>
+-------
 
 
 
+#########  PASSO A PASSO - M9EX1 #####################
 
+1- CRIAR O FORMULARIO
+PostForm.php
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Form/PostForm.php
+
+2- CRIAR A FACTORY
+PostFormFactory.php
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/PostFormFactory.php
+
+
+3- REGISTRAR O FORM
+module.config.php
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/config/module.config.php
+
+
+4- Configurar o PostControler
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/PostController.php
+
+
+5- Injetar FormPost
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/PostControllerFactory.php
+
+### PARTE B
+
+6- Reendenizar o Formulario na nossa View
+PARA: /var/www/workspace/onlinemarket.work/module/Market/view/market/post/index.phtml
+
+TESTAR:
+http://localhost:8888/market/post
+
+
+7- Modificar o Layout , adicionando um Head, para um novo Post
+ARQ: /var/www/workspace/onlinemarket.work/module/Application/view/layout/layout.phtml
+
+TESTAR:
+http://localhost:8888
+http://localhost:8888/market/post
+
+
+### M9Ex1 - Parte C e D
+
+### Parte C
+
+8- vamos trb com os Filtros, dentro da pasta Form
+crie uma classe: PostFilter
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Form/PostFilter.php
+
+9- Criar uma Classe de Filtro
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/PostFilterFactory.php
+
+10- Registrar o Serviço Filter
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/config/module.config.php
+
+11- Atribuir o InputFilter que nos criamos manualmente, a este fonrmulario
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/PostFormFactory.php
+
+
+
+### PARTE D
+
+12- Verificar se os dados enviados sao ou nao validos
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/PostController.php
+
+13- VIEW
+ARE: /var/www/workspace/onlinemarket.work/module/Market/view/market/post/invalid.phtml
+
+##########################
