@@ -4599,3 +4599,442 @@ $result - artistTable->delete(array('id'=>2));
 personalizar o Table
 
 ----------------
+################################################
+
+####  RESOLUÇÃO M10EX1 
+
+## PARTE A
+
+1- Crie uma pasta: Model
+/var/www/workspace/onlinemarket.work/module/Market/src/Market/Model
+
+2- Crie uma classe: ListingsTable.php
+/var/www/workspace/onlinemarket.work/module/Market/src/Market/Model/ListingsTable.php
+-----------
+<?php
+
+namespace Market\Model;
+
+class ListingsTable extends \Zend\Db\TableGateway\TableGateway
+{
+    // M10Ex1 - PARTE A - CRIAR A TABLEgATEWAY
+    public static $tableName = "listings";
+    
+}
+-----------
+
+3- Quando se trb com arquivos locais, é interessante criar um arquivo 
+controle de  verao
+
+COPIAR:
+/var/www/workspace/onlinemarket.work/config/autoload/local.php.dist
+
+COLAR:
+/var/www/workspace/onlinemarket.work/config/autoload/local.php
+---------
+<?php
+
+// M10Ex1 - PARTE B
+
+// database = onlinemarket;
+return array(
+    'db' => array(
+         'driver' => 'pdo',
+         'dsn' => 'mysql:dbname=onlinemarket;host=localhost',
+         'username' => 'root',
+         'password' => 'mengao',
+         'driver_options' => array(
+            PDO::MYSQL_ATTR_INT_COMMAND => "SET NAMES 'UTF8'",
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING       // MOSTRA ERROS
+            // PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT     // ESCONDE ERROS
+        )
+    )
+);
+---------
+
+
+4- REGISTRAR O SERVICO
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/config/module.config.php
+-------------
+     // REGISTRO DA 'viewController' M9Ex1 - parte A     
+     'service_manager' => array(
+         'factories' => array(
+             // M10Wx1 PARTE B
+             'general-adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
+             'market-post-form' => 'Market\Factory\PostFormFactory',
+             // M9Ex1 - parte C - REGISTRO
+             'market-post-filter' => 'Market\Factory\PostFilterFactory'
+         )
+     ),
+-------------
+
+
+5- COPIAR O CONTEUDO DE local.php dentro de local.php.dis
+
+ARQ: /var/www/workspace/onlinemarket.work/config/autoload/local.php.dist
+---------
+<?php
+
+// M10Ex1 - PARTE B
+
+// database = onlinemarket;
+return array(
+    'db' => array(
+         'driver' => 'pdo',
+         'dsn' => 'mysql:dbname=onlinemarket;host=localhost',
+         'username' => 'root',
+         'password' => 'mengao',
+         'driver_options' => array(
+            PDO::MYSQL_ATTR_INT_COMMAND => "SET NAMES 'UTF8'",
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING       // MOSTRA ERROS
+            // PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT     // ESCONDE ERROS
+        )
+    )
+);
+---------
+
+6- CRIAR UM ListingsTableFactory
+
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/ListingsTableFactory.php
+------------
+<?php
+
+namespace Market\Factory;
+
+class ListingsTableFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $sm) 
+    {
+        // CRIAR UMA INSTANCIA DA NOSSA T ABLEA
+        return new \Market\Model\ListingsTable(\Market\Model\ListingsTable::$tableName, 
+                                               $sm->get('general-adapter'));
+    }
+}
+------------
+
+### M10Mx1 PARTE C
+
+7- REGISTRAR ListingTableFactory 
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/config/module.config.php
+-----------------
+     // REGISTRO DA 'viewController' M9Ex1 - parte A     
+     'service_manager' => array(
+         'factories' => array(
+             // M10Mx1 PARTE B
+             'general-adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
+             // M10Wx1 PARTE C
+             'listings-table' => 'Market\Factory\ListingsTableFactory',
+             'market-post-form' => 'Market\Factory\PostFormFactory',
+             // M9Ex1 - parte C - REGISTRO
+             'market-post-filter' => 'Market\Factory\PostFilterFactory'
+         )
+     ),
+-----------------
+
+### PARTE D
+
+8- CRIAR UMA TRAITE
+
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/ListingsTableTrait.php
+-------------
+<?php
+
+namespace Market\Controller;
+
+trait ListingsTableTrait
+{
+    // M10EX1 - PARTE D
+    private $listingsTable;
+    
+    public function setListingsTable($listingsTable){
+        $this->listingsTable = $listingsTable;
+    }
+}
+-------------
+
+9- AGORA PEDE PARA DAR UM use NESTA trait DENTRO DO NOSSO CONTROLER:
+- indexControler
+- viewControler
+- postControler
+
+
+10- ### indexControler
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/IndexController.php
+--------------
+<?php
+namespace Market\Controller;
+//use \Zend\Mvc\Controller\AbstractActionController;
+//use \Zend\View\Model\ViewModel;
+
+class IndexController extends \Zend\Mvc\Controller\AbstractActionController {
+
+    //M10EX1 - PARTE D
+    use ListingsTableTrait;
+        
+    public function indexAction() 
+    {
+        $messages = array();
+        if($this->flashMessenger()->hasMessages()){
+            $messages = $this->flashMessenger()->getMessages();
+        }
+        
+        // M8Ex1 - Parte A
+        return array('messages'=>$messages);
+        //return new \Zend\View\Model\ViewModel(array('messages'=>$messages));
+    }
+    
+    public function fooAction(){
+        return new ViewMofel();
+    }
+}
+
+--------------
+
+
+11- ### viewControler
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/ViewController.php
+----------
+<?php
+
+namespace Market\Controller;
+
+class ViewController extends \Zend\Mvc\Controller\AbstractActionController
+{
+    //M10EX1 - PARTE D
+    use ListingsTableTrait;    
+    
+    public function indexAction() {
+        // PARTE B
+       
+       ..... 
+        
+----------
+
+
+
+12- ### postControler
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/PostController.php
+-----------
+<?php
+// M6Ex1 - Parte B
+namespace Market\Controller;
+
+class PostController extends \Zend\Mvc\Controller\AbstractActionController 
+{
+    //M10EX1 - PARTE D
+    use ListingsTableTrait;    
+    
+    public $categories;
+    
+    // ----------------
+    // M9Ex1 - Parte B
+    private $postForm;
+    
+    .....
+    
+-----------
+
+
+13- #### PARTE E
+
+
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/PostControllerFactory.php
+---------
+<?php
+
+namespace Market\Factory;
+
+class PostControllerFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    // METODO OBRIGATORIO
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $controllerManager) 
+    {
+        $allServices = $controllerManager->getServiceLocator();
+        $sm = $allServices->get('ServiceManager');
+        
+        $categories = $sm->get('categories');
+        
+        $postController = new \Market\Controller\PostController();  // INSTANCIA
+        $postController->setCategories($categories);
+        
+        // M9Ex1  - Parte A
+        // injetar postForm em nosso Controller
+        $postController->setPostForm($sm->get('market-post-form'));
+        
+        // m10ex1 - parte e
+        $postController->setListingsTable($sm->get('listings-table'));
+        
+        return $postController;
+    }
+}
+
+---------
+
+
+#### PARTE F
+
+CRIAR A FACTORY E VIEW
+
+14- DUPLICAR ARQUI COM OUTRO NOME
+
+COPIAR:
+/var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/PostControllerFactory.php
+
+COLAR:
+/var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/IndexControllerFactory.php
+
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/IndexControllerFactory.php
+-----
+<?php
+
+namespace Market\Factory;
+
+class IndexControllerFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    // METODO OBRIGATORIO
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $controllerManager) 
+    {
+        $allServices = $controllerManager->getServiceLocator();
+        $sm = $allServices->get('ServiceManager');
+        
+        $categories = $sm->get('categories');
+        
+        $indexController = new \Market\Controller\IndexController();  // INSTANCIA
+        // $indexController->setCategories($categories);
+        
+        // M9Ex1  - Parte A
+        // injetar postForm em nosso Controller
+        // $indexController->setPostForm($sm->get('market-post-form'));
+        
+        // m10ex1 - parte e
+        $indexController->setListingsTable($sm->get('listings-table'));
+        
+        return $indexController;
+    }
+}
+
+-----
+
+
+
+15- DUPLICAR ARQUIVO E MUDAR NOME
+
+COPIAR:
+/var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/IndexControllerFactory.php
+
+COLAR: 
+/var/www/workspace/onlinemarket.work/module/Market/src/Market/Factory/ViewControllerFactory.php
+----------
+<?php
+
+namespace Market\Factory;
+
+class ViewControllerFactory implements \Zend\ServiceManager\FactoryInterface
+{
+    // METODO OBRIGATORIO
+    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $controllerManager) 
+    {
+        $allServices = $controllerManager->getServiceLocator();
+        $sm = $allServices->get('ServiceManager');
+        
+        $categories = $sm->get('categories');
+        
+        $viewController = new \Market\Controller\ViewController();  // INSTANCIA
+        // $viewController->setCategories($categories);
+        
+        // M9Ex1  - Parte A
+        // injetar postForm em nosso Controller
+        // $viewController->setPostForm($sm->get('market-post-form'));
+        
+        // m10ex1 - parte e
+        $viewController->setListingsTable($sm->get('listings-table'));
+        
+        return $viewController;
+    }
+}
+----------
+
+
+16- REGISTRAR ESTES 3 CONTROLLERS
+ARQ: /var/www/workspace/onlinemarket.work/module/Market/config/module.config.php
+----------
+     // SM - REGISTRO DO SERVICO
+     'controllers' => array(
+         'invokables' => array(  // TIPO DO SERVICO
+             // NOME DO SERVICO        /  CAMINHO DA CLASSE
+             //'Market\Controller\Index' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+             
+             // M10EX1 - PARTE F 
+             // mudeou de 'invokable'  PARA 'factory'
+             // MUDAR O NOME DO REGISTRO DO CONTROLLER PARA SER ACESSADO PELA URL EXPECÍFICA
+             //'market-index-controller' => 'Market\Controller\IndexController',  // SERVICO / URL DA CLASSE
+             // REGISTRO DA 'viewController' M6Ex1 - parte A
+             //'market-view-controller' => 'Market\Controller\ViewController',
+             ),
+         
+         // REGISTRO DA 'viewController' M6Ex1 - parte B
+         'factories' => array(
+            'market-post-controller' => 'Market\Factory\PostControllerFactory',
+             // M10EX1 - PARTE F
+             'market-index-controller' => 'Market\Factory\IndexControllerFactory', 
+             'market-view-controller' => 'Market\Factory\ViewControllerFactory',
+         ),
+         // M6Ex1  - PARTE D - CRIAR APELIDO PARA URL
+         'aliases' => array(
+            'alt' => 'market-view-controller', 
+         ),
+         
+     ),
+----------
+
+22 min faltou criar o banco de dadosS
+
+abre terminal Bash
+
+$ mysql -uroot -p
+$ passwort: mengao
+
+mysql> create database onlinemarket;
+
+mysql> use onlinemarket;
+
+create table listings (
+	listings_id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	category char(16) NOT NULL,
+	title varchar(128) NOT NULL,
+	date_created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	date_expires timestamp NULL DEFAULT NULL,
+	description varchar(4096) DEFAULT NULL,
+	photo_filename varchar(1024) DEFAULT NULL,
+	contact_name varchar(255),
+	contact_email varchar(255),
+	contact_phone varchar(32),
+	city varchar(128) NOT NULL,
+	COUNTRY char(2) NOT NULL,
+	price decimal(12,2) NOT NULL,
+	delete_code char(16) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+	PRIMARY KEY (listings_id),
+	KEY title (title),
+	KEY category (category),
+	KEY delete_code (delete_code)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+
+mysql> show tables;
++------------------------+
+| Tables_in_onlinemarket |
++------------------------+
+| listings               |
++------------------------+
+
+
+TESTAR O COMIGO NA URL:
+http://localhost:8888
+http://localhost:8888/
+http://localhost:8888/post
+http://localhost:8888/market/view/main/TESTE
+
+
+#############
