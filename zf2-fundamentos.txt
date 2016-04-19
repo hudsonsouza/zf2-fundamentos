@@ -4233,3 +4233,369 @@ ARQ: /var/www/workspace/onlinemarket.work/module/Market/src/Market/Controller/Po
 ARE: /var/www/workspace/onlinemarket.work/module/Market/view/market/post/invalid.phtml
 
 ##########################
+
+
+### MODULO 10 - DATABASE
+
+### 10.1 ZEND / DB
+
+Zend Framework 2 com Banco de Dados
+
+- Zend\Db
+- Zend\Db\Adapter
+- Zend\Db\Sql
+- Zend\Db\TableGateway
+
+### - Zend\Db\Adapter
+é um Objeto, que prove uma camada de aplicacao para o ZF2 tenha suporte a camada de  banco de dados
+
+
+- Adapter: cria uma camada de abstracao com a extenções de banco de dados
+php, MySQL, SigleLith
+
+- Plataforme: expecifica as principais implementacoes de codigo fonte p gerar os banco de dados
+	configura as diferencas entre um banco e outro
+	""
+	''
+	,
+	;
+	
+
+$apapter = new Zend\Db\Adapter\Adapter($drierArray);
+
+// MySQLi ***
+$adapter = new Zend\Db\Adapter\Adapter(
+	array(
+		'driver' => 'Mysqli',
+		'database' => 'zend_db_exemple',
+		'username' => 'developer',
+		'password' => 'developer-password'
+	)
+);
+
+
+// Sqlite connection via PDO
+$adapter = new Zend\Db\Adapter\Adapter(
+	array(
+		'driver' => 'Pdo_Sqlite',
+		'database' => 'CAMINHO/sqlite.db'
+	)
+);
+ 
+// ALTERNATIVE/GENERIC SQLITE CONNECTION IA PDO
+// ASSUMES DB IN 'data' folder
+$adapter = new Zend\Db\Adapter\Adapter(
+	array(
+		'driver' => 'pdo',
+		'dsn' => 'sqlite:'.__DIR__.'/data/guestbook.db'
+	)
+);
+
+
+
+ARQ: conecta.php
+-----------
+<?php 
+// MAIN APLICATION CONFIGURATION ARRAY
+return array(
+	'service_manager' => array(
+		'factories' => array(
+			'Zend\Db\Adapter\Adapter' => 
+				'Zend\Db\Adapter|adapterServiceFactory',
+		),
+	),
+
+
+// THE AdapterServiceFactory SERACH FOR AND INTERNALLY USE THE ELEMENT BELOW
+	'db' => array(
+		'driver' => 'pdo',
+		'dsn' => 'mysql:dbname=zend_db_exemple;host=localhost',
+		'username' => 'developer',
+		'password' => '123mudar',
+		'driver_options' => array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'"),
+	),
+
+
+);
+?>
+-----------
+
+
+Como criar um adapter da forma mais organizada
+
+- plataform: plataforma que estamos utilizando, 
+			 normalmente estes dados sao pedos do driver que nos passamos
+- resultSet: como vc vai receber o result e query
+
+### QUERY
+$adapter ->query('SELECT * FROM artist WHERE id=?', array(5));
+ou seja, id = 5;
+
+---------
+
+QUERY_MODE_EXCECUTE
+comando que sera executado no banco de dados
+
+SQL que nao se tem retorno
+- create table
+- alter
+- drop
+
+
+$adapter->query('ALTER TABLE ADD INSDEX(foo_index) ON (foo_column)'),
+adapter::QUERY_MODE_EXECUTE);
+
+----------
+
+COMO CRIAR UM STATEMENTS  PESSOAL
+
+Statement = $adapter->createStamtement($sql, $optionalParameters);
+4result = $statement->execute();
+
+----------
+
+PLATAFORM OBJET
+
+é a camada de  abstracao que vai definir 
+qual o tipo de banco de dados
+como as QUERY serao montados (cada banco trb de um jeito diferente)
+
+$plataform = new Zend\Db\Adapter|platform\Mysql;
+$column = @platform->quoteIdentifier('first_name');
+
+
+
+$plataform = $adapter->getPlataform();
+ou
+$plaform - $adapter->platform;  // ACESSO MAGICO
+
+-------------
+
+### Zend\Db|Sql;
+
+$sql = new Sql($adapter);
+$selec t = $sql ->select();
+$insert t = $sql ->insert();
+$update t = $sql ->update();
+$delete t = $sql ->delete();
+
+------------
+
+use Zend\Db\SqlSql;
+$sql = new sql($adapter);  // CONEXAO DE BANCO DE DADOS
+$select = $sql->select();
+$select->from('foo');
+$select->where(array('id' => 2));
+$statement = $sql->preparestatementForSqlObject($select);
+$results = $statement->execute();
+
+------
+
+// SELECT * FROM tab_foo WHERE id=2;
+
+use Zend\Db\Sql\Sql;
+	$select = new Sql($adapter, 'tab_foo');
+	$select->where(array('id' => 2));
+	
+---------
+
+## prepareStatement
+
+use Zend\Sql\Select;
+$select = new Select();
+ou;
+$select - new Seletc('tab_foo');
+
+TEMOS ALGUNS METODOS PRONTOS
+from()
+columns()
+group()
+limint()
+join()
+offset()
+having()
+order()
+where()
+
+---------------
+
+A PLATAFORMA personaliza a sintaxe do codigo SQL de acordo com o banco de dados que esteja em uso (MySQL, Postgree, Mysqli)
+
+// SQL CONVENCIONAL
+// SELECT * FROM produtcs WHERE qty_on >= 10 AND cost < 100;
+
+// create the objets
+$plataform = new Mysql();
+$select = new Select();
+$where = new Where();
+
+// WHERE
+$where->greaterThanOrEqualTo('qty_oh',10);  // qty_on >= 10
+$where->lessthan('cost',100);  // cost < 100
+
+// SELECT
+$select->from('products')
+	   ->where($where);
+	   
+// DESCOBRIR QUAL A PLATAFORMA QUE ESTA EM USO
+echo $select->getSqlString($platform);
+
+---------------
+
+Objeto de %likes%
+
+// SQL CONVENCIONAL
+// SELECT firt_name AS fn, last_name AS ln, city AS city FROM names
+LIKE '' 
+WHERE qty_on >= 10 AND cost < 100;
+
+// create the objets
+$plataform = new Mysql();
+$select = new Select();
+$where = new Where();
+
+// WHERE
+$where->like('city', '%salt%');
+$where->nest->like('city', '%lake%')
+	  ->or->like('city', '%wood%')
+	  ->unnest;
+	  
+$select->from('names')
+	   ->columns(array(
+				'fn'=>'first_name', 
+				'ln'=>'last_name',
+				'city'
+				))
+		->where($where);
+		
+// DESCOBRIR QUAL A PLATAFORMA QUE ESTA EM USO
+echo $select->getSqlString($platform);		
+
+-----------
+
+### DDL - DATA DEFINITION LANGUAGE
+
+criar operaceos no banco de dados
+
+- CreateTable
+- AlterTable
+- Droptable
+
+- Column
+- Constraint
+
+----------
+use Zend\Db\Sql|Ddl;
+
+// CRIACAO DA TABELA
+$table = new Ddl\CreateTable('names');
+$table->addColumn(new Ddl\Column\Integer('id'));
+$table->addColumn(new Ddl\Column\Varcahr('nome',255));
+$table->addConstraint(new Ddl\Constraint\PrimaruKey('id'));
+
+// EXECUTAR O CODIGO PARA GERAR A TABELA
+$sql = new Zend\Db\Sql\Sql($adapter);
+$adapter->query($sql-LgetSqlStringForSqlObject($table),
+				$adapter:: QUERY_MODE_EXECUTE);
+----------
+
+### TableGateway ***
+
+representa uma tabela no banco de dados em formato de objeto
+ele faz a ponte entre: tabela e o objeto 
+
+
+------------
+class SomeTable extends AbstractTableGateway
+{
+	public function __constract(Adapter $adapter, ResultSetInterface $resultPrototype=null)
+	{
+		// CODIGO AQUI
+	}
+}
+
+// ALTERNATIVA
+class TableGateway extends TableGateway
+{
+	public function __constract($table, 
+								Adapter $adapter,
+								$features = null,
+								ResultSetInterface $resultPrototype=null,
+								Sql $sql=null
+							   )
+	{
+		// CODIGO AQUI
+	}
+}
+
+
+
+------------
+
+
+
+-----
+interface Zend\Db\TableGateway\TableGateway\Interface
+{
+	public function getTable();
+	public function select($where = null);
+	public function insert($set);
+	public function update($set, $where = null);
+	public function delete($where);
+}
+-----------
+
+
+// SELECT-1
+$artistTable = new Zend\Db\TableGateway\TableGateway('artist', $adapter);
+$rowset = $artistTable->select(array('id'=>2);
+$artistRow = $rowset->corrent();
+
+
+//SELETC-2
+$artistTable = new Zend\Db\TableGateway\TableGateway('artist', $adapter);
+$where = $artistTable->getSql->select->where();
+$where->like('name', 'Bar%');
+$rowset = $artistTable->select($where);
+$row = rowset->current();
+
+
+
+// SELECT-3 - FUNCAO ANONIMA
+$artistTable = new Zend\Db\TableGateway\TableGateway('artist', $adapter);
+$rowset = $artistTable->select(function (Select $select)){
+	$seletc->where()->like('%copo%');
+});
+$row = rowset->current();
+
+
+// INSERT
+$artistTable = new Zend\Db\TableGateway\TableGateway('artist', $adapter);
+$data = array(
+				'id' 	=> 3,
+				'email'	=> 'mauro@hotmail.com',
+				'band'	=> 	'Tho Doors'
+			 );
+$success = $artistTable->insert(#data);
+
+
+// UPDATE
+$artistTable = new Zend\Db\TableGateway\TableGateway('artist', $adapter);
+$result = $artistTable->update(
+								array('name'=>'mauro Pedreira'), 
+								array('id'=>2)
+							  );
+
+
+// DELETE
+$artistTable = new Zend\Db\TableGateway\TableGateway('artist', $adapter);
+$result - artistTable->delete(array('id'=>2));
+
+----------
+
+
+### Zend\Table\Feature
+
+personalizar o Table
+
+----------------
